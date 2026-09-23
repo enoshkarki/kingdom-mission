@@ -1,0 +1,533 @@
+---
+const siteTitle = "Our Mission";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{siteTitle} | Kingdom Expansion Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050810;
+      --blue-deep: #0b1d3a;
+      --blue-bright: #4a9eff;
+      --cyan: #22d3ee;
+      --violet: #7c3aed;
+      --text: #e8eefc;
+      --text-dim: rgba(232, 238, 252, 0.65);
+      --text-faint: rgba(232, 238, 252, 0.4);
+      --border: rgba(120, 170, 255, 0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
+    }
+    .fluid-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; will-change: transform; }
+    .blob-1 { width: 520px; height: 520px; top: -120px; left: -100px; background: radial-gradient(circle, #4a9eff 0%, #1a3a6e 55%, transparent 75%); animation: float1 22s ease-in-out infinite; }
+    .blob-2 { width: 600px; height: 600px; top: 35%; right: -180px; background: radial-gradient(circle, #7c3aed 0%, #0b1d3a 60%, transparent 78%); animation: float2 28s ease-in-out infinite; }
+    .blob-3 { width: 480px; height: 480px; bottom: -100px; left: 20%; background: radial-gradient(circle, #22d3ee 0%, #1a3a6e 55%, transparent 78%); opacity: 0.35; animation: float3 26s ease-in-out infinite; }
+    @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(80px, 60px) scale(1.1); } }
+    @keyframes float2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-100px, 80px) scale(1.08); } }
+    @keyframes float3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px, -80px) scale(1.15); } }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: rgba(5, 8, 16, 0.55);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; text-decoration: none; }
+    .brand img { height: 38px; width: auto; display: block; }
+    nav { display: flex; align-items: center; gap: 0.25rem; }
+    nav a { color: var(--text-dim); text-decoration: none; padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease; }
+    nav a:hover { color: var(--text); background: rgba(120, 170, 255, 0.08); }
+    nav a.cta { background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%); color: #fff; margin-left: 0.75rem; box-shadow: 0 4px 20px rgba(74, 158, 255, 0.25); }
+
+    /* Hero */
+    .page-hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 1rem; border-radius: 100px;
+      background: rgba(74, 158, 255, 0.08);
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      font-size: 0.75rem; letter-spacing: 2.5px; text-transform: uppercase;
+      font-weight: 600; color: var(--cyan);
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+    .page-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700; line-height: 1.1; letter-spacing: -1.5px;
+      max-width: 900px; margin: 0 auto 1.5rem;
+    }
+    .page-hero h1 .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 50%, #7c3aed 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradShift 6s ease infinite;
+    }
+    @keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .page-hero p { color: var(--text-dim); font-size: 1.1rem; max-width: 640px; margin: 0 auto; }
+
+    /* Content */
+    .content { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 6rem; position: relative; z-index: 1; }
+    .glass {
+      background: linear-gradient(135deg, rgba(120, 170, 255, 0.06) 0%, rgba(120, 170, 255, 0.02) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass::before {
+      content: "";
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.5), transparent);
+    }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: flex; justify-content: center; gap: 0.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .lang-btn {
+      padding: 0.55rem 1.25rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: rgba(5, 8, 16, 0.4);
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+    .lang-btn:hover { border-color: rgba(74, 158, 255, 0.4); color: var(--text); }
+    .lang-btn.active {
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
+    }
+    .lang-content { display: none; }
+    .lang-content.active { display: block; }
+
+    .intro-card { padding: 2.5rem; margin-bottom: 3rem; }
+    .intro-card p {
+      color: var(--text-dim);
+      font-size: 1.02rem;
+      margin-bottom: 1.35rem;
+      line-height: 1.85;
+    }
+    .intro-card p:last-child { margin-bottom: 0; }
+    .intro-card strong { color: var(--text); font-weight: 600; }
+    .lang-content[data-lang="ne"] .intro-card p,
+    .lang-content[data-lang="ne"] h2,
+    .lang-content[data-lang="ne"] h3,
+    .lang-content[data-lang="ne"] .ministry-card p,
+    .lang-content[data-lang="ne"] .lead,
+    .lang-content[data-lang="ne"] blockquote {
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+      line-height: 2;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+      font-weight: 700; color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+    h2.section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.75px;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    h2.section-title .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .lead { color: var(--text-dim); font-size: 1.02rem; max-width: 720px; margin-bottom: 2rem; }
+
+    /* Ministry grid */
+    .ministry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0 4rem;
+    }
+    .ministry-card { padding: 1.75rem; transition: all 0.3s ease; }
+    .ministry-card:hover { transform: translateY(-4px); border-color: rgba(74, 158, 255, 0.3); }
+    .ministry-card .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(124, 58, 237, 0.1));
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1rem;
+    }
+    .ministry-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.2px;
+    }
+    .ministry-card p { color: var(--text-dim); font-size: 0.92rem; line-height: 1.65; }
+
+    /* Verse */
+    .verse-block {
+      text-align: center; padding: 3rem 2rem;
+      margin: 3rem 0;
+    }
+    .verse-block blockquote {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+      font-style: italic; font-weight: 400;
+      line-height: 1.5; letter-spacing: -0.3px;
+      max-width: 820px; margin: 0 auto 1rem;
+      color: var(--text);
+    }
+    .verse-block cite {
+      font-style: normal; font-size: 0.82rem;
+      letter-spacing: 3px; text-transform: uppercase;
+      font-weight: 600; color: var(--blue-bright);
+    }
+
+    /* Transparency */
+    .transparency {
+      padding: 2rem 2.5rem;
+      border-left: 3px solid var(--blue-bright);
+      margin-bottom: 4rem;
+    }
+    .transparency h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem; margin-bottom: 0.65rem;
+    }
+    .transparency p { color: var(--text-dim); font-size: 0.98rem; line-height: 1.8; }
+
+    /* CTA */
+    .final-cta {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(74, 158, 255, 0.2), transparent 55%),
+        radial-gradient(circle at 70% 80%, rgba(124, 58, 237, 0.18), transparent 55%),
+        linear-gradient(135deg, rgba(11, 29, 58, 0.6), rgba(5, 8, 16, 0.4));
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      margin-top: 2rem;
+    }
+    .final-cta h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+      font-weight: 700; letter-spacing: -0.75px;
+      margin-bottom: 1rem;
+    }
+    .final-cta h2 .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .final-cta p { color: var(--text-dim); max-width: 520px; margin: 0 auto 2rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 1rem 2.25rem; border-radius: 14px;
+      text-decoration: none; font-weight: 600; font-size: 1rem;
+      transition: all 0.25s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(74, 158, 255, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(74, 158, 255, 0.5); }
+
+    footer {
+      padding: 2rem; text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-faint); font-size: 0.85rem;
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 0.85rem 1rem; }
+      nav a { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
+      nav a.cta { margin-left: 0.25rem; padding: 0.5rem 0.9rem; }
+      .page-hero { padding: 3.5rem 1.25rem 2rem; }
+      .content { padding: 1.5rem 1.25rem 4rem; }
+      .glass { padding: 1.5rem; border-radius: 16px; }
+      .intro-card { padding: 1.75rem 1.5rem; }
+      .transparency { padding: 1.5rem 1.75rem; }
+      .final-cta { padding: 2.5rem 1.5rem; border-radius: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="fluid-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header>
+    <a href="/" class="brand">
+      <img src="/kep-logo.png" alt="Kingdom Expansion Partnership" />
+    </a>
+    <nav>
+      <a href="/about">About</a>
+      <a href="/mission">Mission</a>
+      <a href="/blog">Blog</a>
+      <a href="/give">Give</a>
+      <a href="/volunteer" class="cta">Become a Partner</a>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <div class="eyebrow">Our Mission</div>
+    <h1>Once a Year, <span class="grad">My Investment in God's Kingdom</span></h1>
+    <p>Using the resources, time, abilities, and gifts God has given us — for the expansion of His Kingdom.</p>
+  </section>
+
+  <div class="content">
+
+    <!-- Language toggle -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="ne">नेपाली</button>
+    </div>
+
+    <!-- English content -->
+    <div class="lang-content active" data-lang="en">
+      <div class="glass intro-card">
+        <p>
+          It is a privilege for us to use the resources, time, abilities, and gifts that God has given us
+          for the expansion of His Kingdom. With this purpose, we are launching the
+          <strong>"Once a Year, My Investment in God's Kingdom"</strong> campaign to intentionally and
+          strategically invest each year in various areas of ministry, including children's ministry,
+          youth ministry, evangelism and missions, leadership development, church expansion, and other
+          ministries according to the needs and opportunities.
+        </p>
+        <p>
+          This form is not intended only to collect your financial commitment. It is also an opportunity
+          for us to understand how you would like to partner in this campaign through prayer, financial
+          support, volunteering, sharing your skills, or in any other way.
+        </p>
+        <p>
+          We respect each person's individual circumstances and capacity. The resources collected through
+          this campaign will be used for the designated ministry purposes, and an annual financial and
+          ministry report will be presented to our partners for transparency and accountability. Since
+          in-person meetings with everyone may not be possible, we aim to reach out to you through this
+          form. We will contact you once we receive your form.
+        </p>
+        <p>
+          <strong>Thank you for your prayers, participation, and partnership!</strong>
+        </p>
+      </div>
+
+      <span class="section-eyebrow">Areas of Investment</span>
+      <h2 class="section-title">Where your partnership <span class="grad">goes to work</span>.</h2>
+      <p class="lead">
+        Each year, resources are invested intentionally and strategically in the following ministries —
+        according to the needs and opportunities before us.
+      </p>
+
+      <div class="ministry-grid">
+        <div class="glass ministry-card">
+          <div class="icon">🧒</div>
+          <h3>Children's Ministry</h3>
+          <p>Raising the next generation in the knowledge and love of Christ from their earliest years.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🔥</div>
+          <h3>Youth Ministry</h3>
+          <p>Equipping young believers to live boldly for Jesus and lead their generation.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">📢</div>
+          <h3>Evangelism &amp; Mission</h3>
+          <p>Sharing the Gospel in word and deed — reaching the unreached across Nepal and beyond.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🌱</div>
+          <h3>Leadership Development</h3>
+          <p>Training and mentoring the leaders God is raising up for His Church.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">⛪</div>
+          <h3>Church Expansion</h3>
+          <p>Strengthening existing congregations and planting new churches where the Gospel is needed.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🤲</div>
+          <h3>Needs-Based Ministry</h3>
+          <p>Responding to urgent needs and opportunities as the Spirit leads.</p>
+        </div>
+      </div>
+
+      <div class="verse-block">
+        <blockquote>
+          For the earth will be filled with the knowledge of the glory of the LORD as the waters cover the sea.
+        </blockquote>
+        <cite>Habakkuk 2:14</cite>
+      </div>
+
+      <div class="glass transparency">
+        <h3>Transparency &amp; Accountability</h3>
+        <p>
+          The resources collected through this campaign will be used for the designated ministry purposes.
+          An annual financial and ministry report will be presented to our partners — because we believe
+          stewardship requires openness, and trust is built through transparency.
+        </p>
+      </div>
+    </div>
+
+    <!-- Nepali content -->
+    <div class="lang-content" data-lang="ne">
+      <div class="glass intro-card">
+        <p>
+          परमेश्वरले हामीलाई दिनुभएको स्रोत, समय, क्षमता र वरदानहरू उहाँकै राज्यको विस्तारका लागि
+          प्रयोग गर्ने अवसर पाउनु हाम्रो लागि गर्वकाे कुरा हो। यसै उद्देश्यले प्रत्येक वर्ष
+          बालबालिका सेवकाइ, युवा सेवकाइ, सुसमाचार तथा मिशन, नेतृत्व विकास, मण्डली विस्तार तथा
+          आवश्यकता अनुसारका अन्य सेवकाइहरूमा योजनाबद्ध रूपमा लगानी गर्न
+          <strong>"वर्षकाे एकपटक परमेश्वरकाे राज्यमा मेराे लगानी"</strong> अभियान सञ्चालन गर्न
+          लागिएको छ।
+        </p>
+        <p>
+          यो फारम तपाईंको आर्थिक प्रतिबद्धता मात्र संकलन गर्ने माध्यम होइन। तपाईंकाे प्रार्थना,
+          आर्थिक सहयोग, स्वयंसेवा, आफ्नो सीप वा अन्य कुनै माध्यमबाट यस अभियानमा कसरी साझेदार
+          बन्न चाहनुहुन्छ भन्ने बुझ्नका लागि पनि हो। हामी प्रत्येक व्यक्तिको परिस्थिति र क्षमताको
+          सम्मान गर्दछौँ।
+        </p>
+        <p>
+          संकलित स्रोतहरू तोकिएका सेवकाइका उद्देश्यमा प्रयोग गरिनेछन् र यसको वार्षिक आर्थिक तथा
+          सेवकाइ प्रतिवेदन साझेदारहरूसमक्ष प्रस्तुत गरिनेछ। सबैसँग व्यक्तिगत रुपमा प्रत्यक्ष
+          भेटघाटकाे लागि सम्भव नहुनसक्छ तसर्थ यस फारम मार्फत यहाँहरु समक्ष पुग्ने लक्ष्य राखेका
+          छाैं। यहाँहरुकाे फर्म प्राप्त भएपछि हामी यहाँहरुलाई सम्पर्क गर्नेछाैं।
+        </p>
+        <p>
+          <strong>तपाईंको प्रार्थना, सहभागिता र साझेदारीका लागि धन्यवाद।</strong>
+        </p>
+      </div>
+
+      <span class="section-eyebrow">लगानीका क्षेत्रहरू</span>
+      <h2 class="section-title">तपाईंको साझेदारी <span class="grad">कहाँ काम गर्छ</span>।</h2>
+      <p class="lead">
+        प्रत्येक वर्ष, स्रोतहरू यी सेवकाइहरूमा योजनाबद्ध रूपमा लगानी गरिन्छ — हाम्रो सामु रहेका
+        आवश्यकता र अवसरहरू अनुसार।
+      </p>
+
+      <div class="ministry-grid">
+        <div class="glass ministry-card">
+          <div class="icon">🧒</div>
+          <h3>बालबालिका सेवकाइ</h3>
+          <p>आउने पुस्तालाई सानै उमेरदेखि ख्रीष्टको ज्ञान र प्रेममा हुर्काउने।</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🔥</div>
+          <h3>युवा सेवकाइ</h3>
+          <p>युवा विश्वासीहरूलाई येशूको लागि साहसी जीवन बाँच्न र आफ्नो पुस्ताको नेतृत्व गर्न तयार पार्ने।</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">📢</div>
+          <h3>सुसमाचार तथा मिशन</h3>
+          <p>वचन र कर्मद्वारा सुसमाचार साझा गर्दै — नेपाल र बाहिरका अज्ञातहरूसम्म पुग्दै।</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🌱</div>
+          <h3>नेतृत्व विकास</h3>
+          <p>परमेश्वरले आफ्नो मण्डलीको लागि उठाउनुभएका नेताहरूलाई तालिम र मार्गदर्शन दिने।</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">⛪</div>
+          <h3>मण्डली विस्तार</h3>
+          <p>विद्यमान मण्डलीहरूलाई बलियो बनाउँदै र सुसमाचार आवश्यक पर्ने ठाउँहरूमा नयाँ मण्डली स्थापना गर्दै।</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🤲</div>
+          <h3>आवश्यकता अनुसारको सेवकाइ</h3>
+          <p>आत्माको अगुवाइ अनुसार तत्काल आवश्यकता र अवसरहरूमा प्रतिक्रिया दिने।</p>
+        </div>
+      </div>
+
+      <div class="verse-block">
+        <blockquote>
+          किनकि जलले समुद्र ढाकेझैं परमप्रभुको महिमाको ज्ञानले पृथ्वी भरिनेछ।
+        </blockquote>
+        <cite>हबकूक २:१४</cite>
+      </div>
+
+      <div class="glass transparency">
+        <h3>पारदर्शिता र जवाफदेहिता</h3>
+        <p>
+          यस अभियान मार्फत संकलित स्रोतहरू तोकिएका सेवकाइ उद्देश्यहरूको लागि प्रयोग गरिनेछ।
+          वार्षिक आर्थिक तथा सेवकाइ प्रतिवेदन हाम्रा साझेदारहरूसमक्ष प्रस्तुत गरिनेछ — किनकि हामी
+          विश्वास गर्छौं कि भण्डारणको लागि खुलापन आवश्यक छ, र विश्वास पारदर्शिताबाट बन्छ।
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="final-cta">
+      <h2>Ready to <span class="grad">partner with God</span>?</h2>
+      <p>Fill in the Kingdom Expansion Partnership form. We'll reach out to you personally once we receive it.</p>
+      <a href="/volunteer" class="btn btn-primary">Fill Partnership Form →</a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; {new Date().getFullYear()} Kingdom Expansion Partnership. All rights reserved.
+  </footer>
+
+  <script is:inline>
+    const buttons = document.querySelectorAll(".lang-btn");
+    const contents = document.querySelectorAll(".lang-content");
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lang = btn.dataset.lang;
+        buttons.forEach(b => b.classList.toggle("active", b === btn));
+        contents.forEach(c => c.classList.toggle("active", c.dataset.lang === lang));
+      });
+    });
+  </script>
+
+</body>
+</html>
