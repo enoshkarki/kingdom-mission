@@ -1,6 +1,6 @@
 ---
-const siteTitle = "Kingdom Expansion Mission";
-const tagline = "Raising young volunteers and skilled professionals for God's Kingdom";
+const siteTitle = "Kingdom Expansion Partnership";
+const tagline = "Once a Year, My Investment in God's Kingdom";
 ---
 
 <!DOCTYPE html>
@@ -8,221 +8,744 @@ const tagline = "Raising young volunteers and skilled professionals for God's Ki
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{siteTitle}</title>
+  <title>{siteTitle} — KEP</title>
   <meta name="description" content={tagline} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --white: #ffffff;
-      --black: #0a0a0a;
-      --dark-blue: #0b1d3a;
-      --light-blue: #1e3a5f;
-      --accent: #4a9eff;
+      --bg: #050810;
+      --bg-2: #0a1020;
+      --blue-deep: #0b1d3a;
+      --blue-mid: #1a3a6e;
+      --blue-bright: #4a9eff;
+      --cyan: #22d3ee;
+      --violet: #7c3aed;
+      --text: #e8eefc;
+      --text-dim: rgba(232, 238, 252, 0.65);
+      --text-faint: rgba(232, 238, 252, 0.4);
+      --border: rgba(120, 170, 255, 0.12);
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--black);
-      color: var(--white);
-      line-height: 1.6;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
     }
+
+    /* ============ GRAIN OVERLAY ============ */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
+    }
+
+    /* ============ FLUID BLOB BACKGROUND ============ */
+    .fluid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.55;
+      will-change: transform;
+    }
+    .blob-1 {
+      width: 520px; height: 520px;
+      top: -120px; left: -100px;
+      background: radial-gradient(circle, #4a9eff 0%, #1a3a6e 55%, transparent 75%);
+      animation: float1 22s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 600px; height: 600px;
+      top: 30%; right: -180px;
+      background: radial-gradient(circle, #7c3aed 0%, #0b1d3a 60%, transparent 78%);
+      animation: float2 28s ease-in-out infinite;
+    }
+    .blob-3 {
+      width: 480px; height: 480px;
+      bottom: -100px; left: 25%;
+      background: radial-gradient(circle, #22d3ee 0%, #1a3a6e 55%, transparent 78%);
+      opacity: 0.4;
+      animation: float3 26s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(80px, 60px) scale(1.1); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-100px, 80px) scale(1.08); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, -80px) scale(1.15); }
+    }
+
+    /* ============ HEADER ============ */
     header {
-      background: var(--dark-blue);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: rgba(5, 8, 16, 0.55);
+      border-bottom: 1px solid var(--border);
     }
-    .logo {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--white);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       text-decoration: none;
+      color: var(--text);
     }
-    .logo span { color: var(--accent); }
-    nav { display: flex; align-items: center; }
+    .brand img {
+      height: 38px;
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1);
+    }
+    .brand-text {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.3px;
+      display: none;
+    }
+    nav { display: flex; align-items: center; gap: 0.25rem; }
     nav a {
-      color: var(--white);
+      color: var(--text-dim);
       text-decoration: none;
-      margin-left: 2rem;
-      font-size: 0.95rem;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
       font-weight: 500;
-      opacity: 0.85;
-      transition: opacity 0.2s, color 0.2s;
+      transition: all 0.2s ease;
     }
-    nav a:hover { opacity: 1; color: var(--accent); }
+    nav a:hover {
+      color: var(--text);
+      background: rgba(120, 170, 255, 0.08);
+    }
+    nav a.cta {
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      color: #fff;
+      margin-left: 0.75rem;
+      box-shadow: 0 4px 20px rgba(74, 158, 255, 0.25);
+    }
+    nav a.cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(74, 158, 255, 0.4);
+    }
+
+    /* ============ HERO ============ */
     .hero {
-      min-height: 85vh;
+      min-height: 92vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 2rem;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(74, 158, 255, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(11, 29, 58, 0.9) 0%, transparent 50%),
-        linear-gradient(135deg, var(--dark-blue) 0%, var(--black) 100%);
+      padding: 6rem 2rem 4rem;
+      position: relative;
     }
-    .hero .eyebrow {
-      font-size: 0.85rem;
-      letter-spacing: 3px;
+    .hero-logo {
+      margin-bottom: 2.5rem;
+      animation: fadeUp 1s ease 0.1s both;
+    }
+    .hero-logo img {
+      height: 110px;
+      width: auto;
+      filter: brightness(0) invert(1) drop-shadow(0 0 40px rgba(74, 158, 255, 0.35));
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 100px;
+      background: rgba(74, 158, 255, 0.08);
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--accent);
       font-weight: 600;
-      margin-bottom: 1.5rem;
+      color: var(--cyan);
+      margin-bottom: 2rem;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+    .hero-eyebrow::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
     }
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.75rem);
-      font-weight: 800;
-      max-width: 850px;
-      line-height: 1.15;
-      margin-bottom: 1.5rem;
-      letter-spacing: -1px;
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2.25rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      max-width: 960px;
+      margin-bottom: 1.75rem;
+      animation: fadeUp 1s ease 0.35s both;
     }
-    .hero h1 span { color: var(--accent); }
+    .hero h1 .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 45%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
     .hero p {
-      font-size: 1.15rem;
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
       max-width: 620px;
-      opacity: 0.85;
-      margin-bottom: 2.5rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      animation: fadeUp 1s ease 0.5s both;
     }
     .cta-group {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
+      animation: fadeUp 1s ease 0.65s both;
     }
     .btn {
-      display: inline-block;
-      padding: 0.95rem 2.25rem;
-      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2.25rem;
+      border-radius: 14px;
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
-      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      font-family: inherit;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
     }
     .btn-primary {
-      background: var(--accent);
-      color: var(--black);
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(74, 158, 255, 0.3);
     }
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(74, 158, 255, 0.35);
+      box-shadow: 0 14px 44px rgba(74, 158, 255, 0.5);
     }
     .btn-outline {
-      background: transparent;
-      color: var(--white);
-      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
     }
     .btn-outline:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+      border-color: var(--blue-bright);
+      background: rgba(74, 158, 255, 0.06);
+      color: var(--blue-bright);
     }
-    .verse-section {
-      padding: 5rem 2rem;
-      text-align: center;
-      background: var(--black);
-      border-top: 1px solid rgba(255,255,255,0.05);
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .verse-section blockquote {
-      font-size: clamp(1.2rem, 2.5vw, 1.75rem);
-      font-style: italic;
+
+    /* ============ SECTIONS ============ */
+    section {
+      position: relative;
+      padding: 6rem 2rem;
+      z-index: 1;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 1.5rem;
       max-width: 800px;
-      margin: 0 auto 1rem;
-      line-height: 1.5;
-      opacity: 0.9;
     }
-    .verse-section cite {
+    .section-title .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      max-width: 720px;
+      line-height: 1.75;
+    }
+
+    /* ============ GLASS CARDS ============ */
+    .glass {
+      background: linear-gradient(135deg, rgba(120, 170, 255, 0.06) 0%, rgba(120, 170, 255, 0.02) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .glass::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.5), transparent);
+    }
+    .glass:hover {
+      border-color: rgba(74, 158, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    /* ============ INTRO / MISSION TEXT ============ */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .intro-text p {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .intro-text p:last-child { margin-bottom: 0; }
+
+    /* ============ MINISTRY AREAS ============ */
+    .ministry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    .ministry-card {
+      padding: 2rem 1.75rem;
+    }
+    .ministry-card .icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(124, 58, 237, 0.1));
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .ministry-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.3px;
+    }
+    .ministry-card p {
+      color: var(--text-dim);
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+
+    /* ============ PARTNERSHIP WAYS ============ */
+    .ways {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .way {
+      padding: 1.5rem 1.5rem;
+      text-align: center;
+    }
+    .way .num {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .way .label {
       font-size: 0.95rem;
-      color: var(--accent);
+      font-weight: 600;
+      color: var(--text);
+    }
+    .way .sub {
+      font-size: 0.82rem;
+      color: var(--text-faint);
+      margin-top: 0.25rem;
+    }
+
+    /* ============ VERSE ============ */
+    .verse-block {
+      text-align: center;
+      padding: 5rem 2rem;
+      position: relative;
+    }
+    .verse-block blockquote {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.5;
+      max-width: 880px;
+      margin: 0 auto 1.25rem;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+    .verse-block blockquote::before { content: "“"; color: var(--blue-bright); margin-right: 4px; }
+    .verse-block blockquote::after { content: "”"; color: var(--blue-bright); margin-left: 4px; }
+    .verse-block cite {
       font-style: normal;
-      letter-spacing: 2px;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
       text-transform: uppercase;
       font-weight: 600;
+      color: var(--blue-bright);
     }
-    footer {
-      background: var(--dark-blue);
-      padding: 2rem;
+
+    /* ============ TRANSPARENCY ============ */
+    .transparency {
+      padding: 2.5rem;
+      margin-top: 3rem;
+      border-left: 3px solid var(--blue-bright);
+    }
+    .transparency h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .transparency p {
+      color: var(--text-dim);
+      font-size: 0.98rem;
+      line-height: 1.75;
+    }
+
+    /* ============ FINAL CTA ============ */
+    .final-cta {
       text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.6;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 5rem 2rem;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(74, 158, 255, 0.2), transparent 55%),
+        radial-gradient(circle at 70% 80%, rgba(124, 58, 237, 0.18), transparent 55%),
+        linear-gradient(135deg, rgba(11, 29, 58, 0.6), rgba(5, 8, 16, 0.4));
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      margin: 4rem 0 0;
     }
+    .final-cta h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+    .final-cta p {
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 5rem;
+    }
+    footer img {
+      height: 40px;
+      filter: brightness(0) invert(1);
+      opacity: 0.6;
+      margin-bottom: 1rem;
+    }
+    footer p {
+      color: var(--text-faint);
+      font-size: 0.85rem;
+    }
+
+    /* ============ WHATSAPP ============ */
     .whatsapp-float {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 56px;
-      height: 56px;
+      bottom: 24px; right: 24px;
+      width: 56px; height: 56px;
       background: #25D366;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
       z-index: 999;
       transition: transform 0.2s;
     }
-    .whatsapp-float:hover { transform: scale(1.1); }
+    .whatsapp-float:hover { transform: scale(1.08); }
     .whatsapp-float svg { width: 28px; height: 28px; fill: #fff; }
+
+    /* ============ RESPONSIVE ============ */
     @media (max-width: 700px) {
-      header { padding: 1rem; flex-wrap: wrap; gap: 0.75rem; }
-      nav { flex-wrap: wrap; }
-      nav a { margin-left: 1rem; font-size: 0.85rem; }
-      .hero h1 { font-size: 1.9rem; }
-      .hero p { font-size: 1rem; }
+      header { padding: 0.85rem 1rem; }
+      nav a { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
+      nav a.cta { margin-left: 0.25rem; padding: 0.5rem 0.9rem; }
+      .hero { padding: 4rem 1.25rem 3rem; min-height: 82vh; }
+      .hero-logo img { height: 78px; }
+      .btn { padding: 0.9rem 1.75rem; font-size: 0.95rem; }
+      section { padding: 4rem 1.25rem; }
+      .glass { padding: 1.5rem; border-radius: 16px; }
+      .transparency { padding: 1.75rem 1.5rem; }
+      .final-cta { padding: 3rem 1.5rem; border-radius: 18px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Fluid animated background -->
+  <div class="fluid-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Header -->
   <header>
-    <a href="/" class="logo">Kingdom<span>Mission</span></a>
+    <a href="/" class="brand">
+      <img src="/kep-logo.png" alt="Kingdom Expansion Partnership" />
+    </a>
     <nav>
       <a href="/about">About</a>
       <a href="/mission">Mission</a>
-      <a href="/volunteer">Volunteer</a>
       <a href="/blog">Blog</a>
       <a href="/give">Give</a>
+      <a href="/volunteer" class="cta">Become a Partner</a>
     </nav>
   </header>
 
+  <!-- Hero -->
   <section class="hero">
-    <div class="eyebrow">Kingdom Expansion Partnership</div>
-    <h1>Raising <span>Kingdom Builders</span> for God's Mission</h1>
+    <div class="hero-logo">
+      <img src="/kep-logo.png" alt="Kingdom Expansion Partnership" />
+    </div>
+    <div class="hero-eyebrow">Kingdom Expansion Partnership</div>
+    <h1>
+      Once a Year,<br />
+      <span class="grad">My Investment in God's Kingdom</span>
+    </h1>
     <p>
-      {tagline}. Join young volunteers and skilled professionals who are
-      investing their time, talent, and treasure into the expansion of God's Kingdom.
+      Using the resources, time, abilities, and gifts God has given us — for the expansion of His Kingdom across Nepal and beyond.
     </p>
     <div class="cta-group">
-      <a href="/volunteer" class="btn btn-primary">Become a Partner</a>
+      <a href="/volunteer" class="btn btn-primary">Become a Partner →</a>
       <a href="/mission" class="btn btn-outline">Learn More</a>
     </div>
   </section>
 
-  <section class="verse-section">
-    <blockquote>
-      "For the earth will be filled with the knowledge of the glory of the LORD
-      as the waters cover the sea."
-    </blockquote>
-    <cite>Habakkuk 2:14</cite>
+  <!-- Intro -->
+  <section>
+    <div class="container">
+      <span class="section-eyebrow">The Invitation</span>
+      <h2 class="section-title">
+        A call to <span class="grad">invest in the Kingdom</span> — with everything God has placed in your hands.
+      </h2>
+      <div class="intro-grid">
+        <div class="glass intro-text">
+          <p>
+            It is a privilege for us to use the resources, time, abilities, and gifts that God has given us
+            for the expansion of His Kingdom. With this purpose, we are launching the
+            <strong>"Once a Year, My Investment in God's Kingdom"</strong> campaign to intentionally and
+            strategically invest each year in various areas of ministry.
+          </p>
+          <p>
+            This form is not intended only to collect your financial commitment. It is also an opportunity
+            for us to understand how you would like to partner in this campaign — through prayer, financial
+            support, volunteering, sharing your skills, or in any other way.
+          </p>
+          <p>
+            We respect each person's individual circumstances and capacity. We will contact you once we
+            receive your form.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 
+  <!-- Ministry Areas -->
+  <section>
+    <div class="container">
+      <span class="section-eyebrow">Areas of Investment</span>
+      <h2 class="section-title">Where your partnership <span class="grad">goes to work</span>.</h2>
+      <p class="lead">
+        Each year, resources are invested intentionally and strategically in the following ministries —
+        according to the needs and opportunities before us.
+      </p>
+
+      <div class="ministry-grid">
+        <div class="glass ministry-card">
+          <div class="icon">🧒</div>
+          <h3>Children's Ministry</h3>
+          <p>Raising the next generation in the knowledge and love of Christ from their earliest years.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🔥</div>
+          <h3>Youth Ministry</h3>
+          <p>Equipping young believers to live boldly for Jesus and lead their generation.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">📢</div>
+          <h3>Evangelism &amp; Mission</h3>
+          <p>Sharing the Gospel in word and deed — reaching the unreached across Nepal and beyond.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🌱</div>
+          <h3>Leadership Development</h3>
+          <p>Training and mentoring the leaders God is raising up for His Church.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">⛪</div>
+          <h3>Church Expansion</h3>
+          <p>Strengthening existing congregations and planting new churches where the Gospel is needed.</p>
+        </div>
+        <div class="glass ministry-card">
+          <div class="icon">🤲</div>
+          <h3>Needs-Based Ministry</h3>
+          <p>Responding to urgent needs and opportunities as the Spirit leads.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verse -->
+  <section class="verse-block">
+    <div class="container">
+      <blockquote>
+        For the earth will be filled with the knowledge of the glory of the LORD as the waters cover the sea.
+      </blockquote>
+      <cite>Habakkuk 2:14</cite>
+    </div>
+  </section>
+
+  <!-- Ways to Partner -->
+  <section>
+    <div class="container">
+      <span class="section-eyebrow">Ways to Partner</span>
+      <h2 class="section-title">You're not just giving — <span class="grad">you're joining the mission</span>.</h2>
+      <p class="lead">
+        Partnership takes many forms. Choose the one that fits how God is leading you.
+      </p>
+
+      <div class="ways">
+        <div class="glass way">
+          <div class="num">01</div>
+          <div class="label">Prayer Partner</div>
+          <div class="sub">Intercede for the mission</div>
+        </div>
+        <div class="glass way">
+          <div class="num">02</div>
+          <div class="label">Financial Partner</div>
+          <div class="sub">Give once a year or monthly</div>
+        </div>
+        <div class="glass way">
+          <div class="num">03</div>
+          <div class="label">Volunteer Partner</div>
+          <div class="sub">Serve with your time</div>
+        </div>
+        <div class="glass way">
+          <div class="num">04</div>
+          <div class="label">Skills Partner</div>
+          <div class="sub">Offer your professional gifts</div>
+        </div>
+      </div>
+
+      <!-- Transparency -->
+      <div class="glass transparency">
+        <h3>Transparency &amp; Accountability</h3>
+        <p>
+          The resources collected through this campaign will be used for the designated ministry purposes.
+          An annual financial and ministry report will be presented to our partners — because we believe
+          stewardship requires openness, and trust is built through transparency.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section>
+    <div class="container">
+      <div class="final-cta">
+        <h2>Ready to <span class="grad">partner with God</span>?</h2>
+        <p>
+          Fill in the Kingdom Expansion Partnership form. We'll reach out to you personally
+          once we receive it.
+        </p>
+        <a href="/volunteer" class="btn btn-primary">Fill Partnership Form →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    &copy; {new Date().getFullYear()} Kingdom Expansion Mission. All rights reserved.
+    <img src="/kep-logo.png" alt="Kingdom Expansion Partnership" />
+    <p>&copy; {new Date().getFullYear()} Kingdom Expansion Partnership. All rights reserved.</p>
   </footer>
 
-  <a href="https://wa.me/9779807363328" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <!-- WhatsApp -->
+  <a href="https://wa.me/9779800000000" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
     </svg>
   </a>
+
 </body>
 </html>
