@@ -8,198 +8,302 @@ const siteTitle = "Admin Dashboard";
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>{siteTitle} | Kingdom Mission</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>{siteTitle} | Kingdom Expansion Partnership</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --white: #ffffff;
-      --black: #0a0a0a;
-      --dark-blue: #0b1d3a;
-      --accent: #4a9eff;
+      --bg: #050810;
+      --blue-bright: #4a9eff;
+      --cyan: #22d3ee;
+      --violet: #7c3aed;
+      --text: #e8eefc;
+      --text-dim: rgba(232, 238, 252, 0.65);
+      --text-faint: rgba(232, 238, 252, 0.4);
+      --border: rgba(120, 170, 255, 0.12);
       --green: #22c55e;
       --red: #ef4444;
+      --yellow: #fbbf24;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--black);
-      color: var(--white);
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
     }
-    /* ---- Password gate ---- */
-    #gate {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem;
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 1000;
+      pointer-events: none; opacity: 0.3; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
     }
+    .fluid-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; }
+    .blob-1 { width: 520px; height: 520px; top: -120px; left: -100px; background: radial-gradient(circle, #4a9eff 0%, #1a3a6e 55%, transparent 75%); }
+    .blob-2 { width: 600px; height: 600px; bottom: -180px; right: -180px; background: radial-gradient(circle, #7c3aed 0%, #0b1d3a 60%, transparent 78%); }
+
+    /* ---- Gate ---- */
+    #gate { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; position: relative; z-index: 1; }
     .gate-card {
-      background: var(--dark-blue);
-      padding: 3rem 2.5rem;
-      border-radius: 16px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, rgba(120,170,255,0.06), rgba(120,170,255,0.02));
+      padding: 3rem 2.5rem; border-radius: 20px; max-width: 440px; width: 100%;
+      text-align: center; border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      position: relative; overflow: hidden;
     }
-    .gate-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 800; }
-    .gate-card p { opacity: 0.7; font-size: 0.9rem; margin-bottom: 2rem; }
+    .gate-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(74,158,255,0.5), transparent); }
+    .gate-card h1 { font-family: 'Sora', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -0.5px; }
+    .gate-card p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem; }
     .gate-card input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.05);
-      color: var(--white);
-      font-size: 1rem;
-      font-family: inherit;
-      margin-bottom: 1rem;
+      width: 100%; padding: 0.9rem 1rem; border-radius: 12px;
+      border: 1px solid rgba(120,170,255,0.15);
+      background: rgba(5,8,16,0.5); color: var(--text);
+      font-size: 1rem; font-family: inherit; margin-bottom: 1rem;
     }
-    .gate-card input:focus { outline: none; border-color: var(--accent); }
+    .gate-card input:focus { outline: none; border-color: var(--blue-bright); box-shadow: 0 0 0 4px rgba(74,158,255,0.1); }
     .gate-card button {
-      width: 100%;
-      padding: 0.95rem;
-      border-radius: 10px;
-      border: none;
-      background: var(--accent);
-      color: var(--black);
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
+      width: 100%; padding: 0.95rem; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(74,158,255,0.3);
     }
-    .gate-card button:hover { opacity: 0.9; }
-    #gate-error {
-      color: var(--red);
-      font-size: 0.85rem;
-      margin-top: 1rem;
-      display: none;
-    }
+    .gate-card button:hover { transform: translateY(-1px); }
+    #gate-error { color: var(--red); font-size: 0.85rem; margin-top: 1rem; display: none; }
+
     /* ---- Dashboard ---- */
-    #dashboard { display: none; }
+    #dashboard { display: none; min-height: 100vh; }
     .dash-header {
-      background: var(--dark-blue);
-      padding: 1.25rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      flex-wrap: wrap;
-      gap: 1rem;
+      background: rgba(5,8,16,0.7);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+      backdrop-filter: blur(20px);
+      position: sticky; top: 0; z-index: 100;
     }
-    .dash-header h1 { font-size: 1.15rem; font-weight: 700; }
-    .dash-header h1 span { color: var(--accent); }
-    .header-actions { display: flex; gap: 0.75rem; }
+    .dash-header .brand img { height: 34px; }
+    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
     .btn-sm {
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: transparent;
-      color: var(--white);
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-family: inherit;
-      font-weight: 500;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      padding: 0.55rem 1rem; border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(5,8,16,0.5); color: var(--text);
+      cursor: pointer; font-size: 0.85rem; font-family: inherit; font-weight: 500;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+      transition: all 0.2s;
     }
-    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-sm.primary { background: var(--accent); color: var(--black); border-color: var(--accent); }
-    .btn-sm.primary:hover { opacity: 0.9; }
+    .btn-sm:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+    .btn-sm.primary { background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%); color: #fff; border-color: transparent; }
+    .btn-sm.danger { border-color: rgba(239,68,68,0.3); color: var(--red); }
+    .btn-sm.danger:hover { background: rgba(239,68,68,0.1); border-color: var(--red); }
 
-    .dash-body { padding: 2rem; max-width: 1400px; margin: 0 auto; }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: var(--dark-blue);
-      padding: 1.25rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .stat-card .number { font-size: 1.75rem; font-weight: 800; color: var(--accent); line-height: 1; }
-    .stat-card .label { opacity: 0.65; font-size: 0.8rem; margin-top: 0.4rem; letter-spacing: 0.5px; text-transform: uppercase; }
-
-    .toolbar {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 0.4rem;
+      padding: 1rem 2rem 0;
+      max-width: 1400px; margin: 0 auto;
+      position: relative; z-index: 1;
       flex-wrap: wrap;
-      align-items: center;
     }
+    .tab {
+      padding: 0.65rem 1.35rem; border-radius: 10px 10px 0 0;
+      border: 1px solid transparent;
+      background: transparent; color: var(--text-dim);
+      cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      background: rgba(74,158,255,0.08);
+      border-color: var(--border);
+      border-bottom-color: transparent;
+      color: var(--cyan);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .dash-body { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.75rem; }
+    .stat-card {
+      background: linear-gradient(135deg, rgba(120,170,255,0.06), rgba(120,170,255,0.02));
+      padding: 1.25rem; border-radius: 14px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+    .stat-card .number { font-family: 'Sora', sans-serif; font-size: 1.75rem; font-weight: 800; color: var(--cyan); line-height: 1; }
+    .stat-card .label { color: var(--text-faint); font-size: 0.75rem; margin-top: 0.4rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+
+    /* Toolbar */
+    .toolbar { display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
     .toolbar input, .toolbar select {
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--white);
-      font-family: inherit;
-      font-size: 0.9rem;
+      padding: 0.7rem 1rem; border-radius: 10px;
+      border: 1px solid rgba(120,170,255,0.15);
+      background: rgba(5,8,16,0.5); color: var(--text);
+      font-family: inherit; font-size: 0.9rem;
     }
     .toolbar input { flex: 1; min-width: 200px; }
-    .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--accent); }
+    .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--blue-bright); }
 
+    /* Table */
     .table-wrap {
-      background: var(--dark-blue);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.05);
+      background: linear-gradient(135deg, rgba(120,170,255,0.06), rgba(120,170,255,0.02));
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
     }
     .table-scroll { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 900px; }
-    th, td {
-      padding: 0.85rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      font-size: 0.88rem;
-    }
+    th, td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid rgba(120,170,255,0.08); font-size: 0.88rem; }
     th {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.6;
-      font-weight: 600;
-      background: rgba(0,0,0,0.15);
-      position: sticky;
-      top: 0;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-faint); font-weight: 700;
+      background: rgba(0,0,0,0.25);
+      position: sticky; top: 0;
     }
     tbody tr:hover { background: rgba(74,158,255,0.04); }
     tbody tr:last-child td { border-bottom: none; }
-    .empty-state { padding: 4rem 2rem; text-align: center; opacity: 0.6; }
-    .loading-state { padding: 4rem 2rem; text-align: center; opacity: 0.6; }
-    .tag {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      background: rgba(74,158,255,0.15);
-      color: var(--accent);
-    }
+    .empty-state { padding: 3rem 2rem; text-align: center; color: var(--text-dim); }
+    .loading-state { padding: 3rem 2rem; text-align: center; color: var(--text-dim); }
+    .tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; background: rgba(74,158,255,0.15); color: var(--blue-bright); }
     .tag.financial { background: rgba(34,197,94,0.15); color: var(--green); }
     .tag.prayer { background: rgba(168,85,247,0.15); color: #a855f7; }
-    .tag.volunteer { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .tag.volunteer { background: rgba(251,191,36,0.15); color: var(--yellow); }
     .tag.missionary { background: rgba(239,68,68,0.15); color: var(--red); }
+
+    /* Blog editor */
+    .editor-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; }
+    @media (max-width: 1000px) { .editor-grid { grid-template-columns: 1fr; } }
+
+    .editor-card {
+      background: linear-gradient(135deg, rgba(120,170,255,0.06), rgba(120,170,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      backdrop-filter: blur(20px);
+      position: relative; overflow: hidden;
+    }
+    .editor-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(74,158,255,0.4), transparent); }
+    .editor-card h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem; font-weight: 700;
+      margin-bottom: 1.25rem; letter-spacing: -0.3px;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .editor-card h2 .icon { color: var(--cyan); }
+
+    .field { margin-bottom: 1.15rem; }
+    .field label {
+      display: block; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-dim); margin-bottom: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+    .field label .hint { color: var(--text-faint); font-weight: 400; margin-left: 0.4rem; font-size: 0.78rem; }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
+      border: 1px solid rgba(120,170,255,0.15);
+      background: rgba(5,8,16,0.5); color: var(--text);
+      font-family: inherit; font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--blue-bright);
+      box-shadow: 0 0 0 4px rgba(74,158,255,0.1);
+    }
+    .field textarea { min-height: 300px; resize: vertical; line-height: 1.6; font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.9rem; }
+    .field textarea.short { min-height: 80px; font-family: 'Inter', sans-serif; font-size: 0.95rem; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+
+    .md-hint {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      padding: 0.75rem 1rem; border-radius: 10px;
+      background: rgba(74,158,255,0.05);
+      border: 1px solid rgba(74,158,255,0.12);
+      font-size: 0.78rem;
+      color: var(--text-faint);
+      margin-bottom: 1rem;
+    }
+    .md-hint code {
+      background: rgba(74,158,255,0.12);
+      color: var(--cyan);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .publish-btn {
+      width: 100%; padding: 1rem; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
+      color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(74,158,255,0.3);
+      transition: transform 0.2s;
+      margin-top: 0.5rem;
+    }
+    .publish-btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .publish-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .post-list { display: flex; flex-direction: column; gap: 0.75rem; max-height: 520px; overflow-y: auto; padding-right: 0.25rem; }
+    .post-item {
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid rgba(120,170,255,0.1);
+      background: rgba(5,8,16,0.4);
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      transition: all 0.2s;
+    }
+    .post-item:hover { border-color: rgba(74,158,255,0.3); }
+    .post-item .info { min-width: 0; flex: 1; }
+    .post-item .title { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-item .slug { font-size: 0.75rem; color: var(--text-faint); font-family: monospace; }
+    .post-item .actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+    .post-item .actions button, .post-item .actions a {
+      padding: 0.35rem 0.65rem; border-radius: 8px; font-size: 0.75rem;
+      font-family: inherit; font-weight: 600;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-dim); cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .post-item .actions button:hover, .post-item .actions a:hover { color: var(--cyan); border-color: var(--cyan); }
+    .post-item .actions .del:hover { color: var(--red); border-color: var(--red); }
+
+    .status-msg {
+      padding: 0.85rem 1.15rem; border-radius: 10px;
+      font-size: 0.88rem; margin-top: 1rem;
+      display: none;
+    }
+    .status-msg.success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--green); display: block; }
+    .status-msg.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); display: block; }
+    .status-msg.info { background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.3); color: var(--cyan); display: block; }
+    .status-msg a { color: inherit; text-decoration: underline; }
 
     @media (max-width: 700px) {
       .dash-body { padding: 1rem; }
       .dash-header { padding: 1rem; }
-      .stat-card .number { font-size: 1.4rem; }
+      .tabs { padding: 1rem 1rem 0; }
+      .editor-card { padding: 1.25rem; }
+      .field textarea { min-height: 220px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Password gate -->
+  <div class="fluid-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Gate -->
   <div id="gate">
     <div class="gate-card">
-      <h1>Kingdom Mission</h1>
-      <p>Admin Dashboard — Authorized Access Only</p>
+      <h1>KEP Admin</h1>
+      <p>Kingdom Expansion Partnership — Authorized Access Only</p>
       <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password" />
       <button id="login-btn">Access Dashboard</button>
       <div id="gate-error">Incorrect password. Please try again.</div>
@@ -209,79 +313,129 @@ const siteTitle = "Admin Dashboard";
   <!-- Dashboard -->
   <div id="dashboard">
     <div class="dash-header">
-      <h1>Kingdom<span>Mission</span> — Admin</h1>
+      <div class="brand"><img src="/kep-logo.png" alt="KEP" /></div>
       <div class="header-actions">
         <button class="btn-sm" id="refresh-btn">↻ Refresh</button>
-        <button class="btn-sm primary" id="export-btn">↓ Export CSV</button>
         <button class="btn-sm" id="logout-btn">Logout</button>
       </div>
     </div>
 
-    <div class="dash-body">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="number" id="stat-total">—</div>
-          <div class="label">Total Submissions</div>
+    <div class="tabs">
+      <button class="tab active" data-tab="submissions">📋 Submissions</button>
+      <button class="tab" data-tab="blog">✍️ Blog Editor</button>
+    </div>
+
+    <!-- Submissions panel -->
+    <div class="tab-panel active" data-panel="submissions">
+      <div class="dash-body">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="number" id="stat-total">—</div><div class="label">Total Submissions</div></div>
+          <div class="stat-card"><div class="number" id="stat-recent">—</div><div class="label">Last 7 Days</div></div>
+          <div class="stat-card"><div class="number" id="stat-financial">—</div><div class="label">Financial Partners</div></div>
+          <div class="stat-card"><div class="number" id="stat-volunteer">—</div><div class="label">Volunteer Partners</div></div>
         </div>
-        <div class="stat-card">
-          <div class="number" id="stat-recent">—</div>
-          <div class="label">Last 7 Days</div>
+
+        <div class="toolbar">
+          <input type="text" id="search" placeholder="Search by name, email, phone..." />
+          <select id="filter-type">
+            <option value="">All Partnership Types</option>
+            <option value="Prayer Partner">Prayer Partner</option>
+            <option value="Financial Partner">Financial Partner</option>
+            <option value="Volunteer Partner">Volunteer Partner</option>
+            <option value="Skills Partner">Skills Partner</option>
+            <option value="Full-Time Missionary">Full-Time Missionary</option>
+          </select>
+          <button class="btn-sm primary" id="export-btn">↓ Export CSV</button>
         </div>
-        <div class="stat-card">
-          <div class="number" id="stat-financial">—</div>
-          <div class="label">Financial Partners</div>
-        </div>
-        <div class="stat-card">
-          <div class="number" id="stat-volunteer">—</div>
-          <div class="label">Volunteer Partners</div>
+
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <div class="loading-state" id="loading">Loading submissions...</div>
+            <div class="empty-state" id="empty" style="display:none;">No submissions yet.</div>
+            <table id="table" style="display:none;">
+              <thead>
+                <tr>
+                  <th>Date</th><th>Name</th><th>Email</th><th>Phone</th>
+                  <th>Church Role</th><th>Partnership</th><th>Amount</th><th>Frequency</th><th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="toolbar">
-        <input type="text" id="search" placeholder="Search by name, email, phone..." />
-        <select id="filter-type">
-          <option value="">All Partnership Types</option>
-          <option value="Prayer Partner">Prayer Partner</option>
-          <option value="Financial Partner">Financial Partner</option>
-          <option value="Volunteer Partner">Volunteer Partner</option>
-          <option value="Full-Time Missionary">Full-Time Missionary</option>
-        </select>
-      </div>
+    <!-- Blog panel -->
+    <div class="tab-panel" data-panel="blog">
+      <div class="dash-body">
+        <div class="editor-grid">
 
-      <div class="table-wrap">
-        <div class="table-scroll">
-          <div class="loading-state" id="loading">Loading submissions...</div>
-          <div class="empty-state" id="empty" style="display:none;">No submissions yet.</div>
-          <table id="table" style="display:none;">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Church Role</th>
-                <th>Partnership</th>
-                <th>Amount</th>
-                <th>Frequency</th>
-                <th>Message</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
+          <!-- Editor -->
+          <div class="editor-card">
+            <h2><span class="icon">✍️</span> New Blog Post</h2>
+
+            <div class="field">
+              <label for="post-title">Title <span class="hint">required</span></label>
+              <input type="text" id="post-title" placeholder="e.g., A testimony from Pokhara" />
+            </div>
+
+            <div class="field">
+              <label for="post-description">Description <span class="hint">one-line summary shown on the listing</span></label>
+              <input type="text" id="post-description" class="short" placeholder="Short summary of the post" />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="post-slug">Slug <span class="hint">URL name — auto-generated if empty</span></label>
+                <input type="text" id="post-slug" placeholder="a-testimony-from-pokhara" />
+              </div>
+              <div class="field">
+                <label for="post-author">Author <span class="hint">optional</span></label>
+                <input type="text" id="post-author" placeholder="Kingdom Expansion Partnership" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="post-body">Content <span class="hint">Markdown supported</span></label>
+              <div class="md-hint">
+                <span><code>## Heading</code></span>
+                <span><code>**bold**</code></span>
+                <span><code>*italic*</code></span>
+                <span><code>- list</code></span>
+                <span><code>&gt; quote</code></span>
+                <span><code>[link](url)</code></span>
+              </div>
+              <textarea id="post-body" placeholder="Write your post here..."></textarea>
+            </div>
+
+            <button class="publish-btn" id="publish-btn">Publish Post</button>
+            <div class="status-msg" id="publish-status"></div>
+          </div>
+
+          <!-- Existing posts -->
+          <div class="editor-card">
+            <h2><span class="icon">📚</span> Published Posts</h2>
+            <div class="post-list" id="post-list">
+              <div class="loading-state">Loading posts...</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 
   <script is:inline>
-    // ⚠️ CHANGE THIS PASSWORD
-    // 1. Go to https://www.base64encode.org
-    // 2. Type your new password → click Encode
-    // 3. Copy the result and paste it below, replacing the current value
-    const ADMIN_PASSWORD_B64 = "S2luZ2RvbU1pc3Npb24yMDI2IQ=="; // default: "KingdomMission2026!"
+    // ⚠️ Password (base64). Default: "KingdomMission2026!"
+    // To change: encode your new password at base64encode.org and paste it below.
+    const ADMIN_PASSWORD_B64 = "S2luZ2RvbU1pc3Npb24yMDI2IQ==";
 
-    // ⚠️ REPLACE with your Apps Script Web App URL (same one used in volunteer.astro)
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzk1-dNORo4pEP5IJ5exnhU6d8zntrtKqnLM_c4Zd2ALXw2vfUavD3Hu9NHzaM5wVs/exec";
+    // ⚠️ Your Apps Script URL (form submissions)
+    const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+    // ⚠️ Your Worker URL (blog API)
+    const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
 
     const gate = document.getElementById("gate");
     const dashboard = document.getElementById("dashboard");
@@ -290,25 +444,11 @@ const siteTitle = "Admin Dashboard";
     const gateError = document.getElementById("gate-error");
     const logoutBtn = document.getElementById("logout-btn");
     const refreshBtn = document.getElementById("refresh-btn");
-    const exportBtn = document.getElementById("export-btn");
-    const searchInput = document.getElementById("search");
-    const filterType = document.getElementById("filter-type");
-    const loading = document.getElementById("loading");
-    const empty = document.getElementById("empty");
-    const table = document.getElementById("table");
-    const tbody = document.getElementById("tbody");
 
-    let allData = [];
-
-    // Check if already logged in this session
-    if (sessionStorage.getItem("km_admin_auth") === "1") {
-      showDashboard();
-    }
+    if (sessionStorage.getItem("km_admin_auth") === "1") showDashboard();
 
     loginBtn.addEventListener("click", tryLogin);
-    passwordInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") tryLogin();
-    });
+    passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
 
     function tryLogin() {
       const entered = passwordInput.value;
@@ -326,7 +466,8 @@ const siteTitle = "Admin Dashboard";
     function showDashboard() {
       gate.style.display = "none";
       dashboard.style.display = "block";
-      loadData();
+      loadSubmissions();
+      loadBlogPosts();
     }
 
     logoutBtn.addEventListener("click", () => {
@@ -334,13 +475,35 @@ const siteTitle = "Admin Dashboard";
       location.reload();
     });
 
-    refreshBtn.addEventListener("click", loadData);
+    refreshBtn.addEventListener("click", () => {
+      loadSubmissions();
+      loadBlogPosts();
+    });
 
-    async function loadData() {
+    // Tabs
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.tab;
+        document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.dataset.panel === target));
+      });
+    });
+
+    // ============ SUBMISSIONS ============
+    const searchInput = document.getElementById("search");
+    const filterType = document.getElementById("filter-type");
+    const loading = document.getElementById("loading");
+    const empty = document.getElementById("empty");
+    const table = document.getElementById("table");
+    const tbody = document.getElementById("tbody");
+    const exportBtn = document.getElementById("export-btn");
+
+    let allData = [];
+
+    async function loadSubmissions() {
       loading.style.display = "block";
       table.style.display = "none";
       empty.style.display = "none";
-
       try {
         const res = await fetch(APPS_SCRIPT_URL);
         const data = await res.json();
@@ -348,39 +511,27 @@ const siteTitle = "Admin Dashboard";
         updateStats();
         renderTable();
       } catch (err) {
-        loading.textContent = "Error loading data. Check console.";
+        loading.textContent = "Error loading submissions.";
         console.error(err);
       }
     }
 
     function updateStats() {
       document.getElementById("stat-total").textContent = allData.length;
-
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      const recent = allData.filter(r => new Date(r.Timestamp) > sevenDaysAgo);
-      document.getElementById("stat-recent").textContent = recent.length;
-
-      const financial = allData.filter(r => r["Partnership Type"] === "Financial Partner");
-      document.getElementById("stat-financial").textContent = financial.length;
-
-      const volunteer = allData.filter(r => r["Partnership Type"] === "Volunteer Partner");
-      document.getElementById("stat-volunteer").textContent = volunteer.length;
+      const seven = new Date(); seven.setDate(seven.getDate() - 7);
+      document.getElementById("stat-recent").textContent = allData.filter(r => new Date(r.Timestamp) > seven).length;
+      document.getElementById("stat-financial").textContent = allData.filter(r => r["Partnership Type"] === "Financial Partner").length;
+      document.getElementById("stat-volunteer").textContent = allData.filter(r => r["Partnership Type"] === "Volunteer Partner").length;
     }
 
     function renderTable() {
-      const search = searchInput.value.toLowerCase().trim();
-      const typeFilter = filterType.value;
-
+      const s = searchInput.value.toLowerCase().trim();
+      const f = filterType.value;
       const filtered = allData.filter(row => {
-        const matchesSearch = !search ||
-          (row["Full Name"] || "").toLowerCase().includes(search) ||
-          (row["Email"] || "").toLowerCase().includes(search) ||
-          (row["Phone"] || "").toString().toLowerCase().includes(search);
-        const matchesType = !typeFilter || row["Partnership Type"] === typeFilter;
-        return matchesSearch && matchesType;
+        const mS = !s || (row["Full Name"]||"").toLowerCase().includes(s) || (row["Email"]||"").toLowerCase().includes(s) || (row["Phone"]||"").toString().toLowerCase().includes(s);
+        const mF = !f || row["Partnership Type"] === f;
+        return mS && mF;
       });
-
       if (filtered.length === 0) {
         loading.style.display = "none";
         table.style.display = "none";
@@ -388,80 +539,172 @@ const siteTitle = "Admin Dashboard";
         empty.textContent = allData.length === 0 ? "No submissions yet." : "No matches for your search.";
         return;
       }
-
       tbody.innerHTML = "";
       filtered.forEach(row => {
         const tr = document.createElement("tr");
-
-        const date = row.Timestamp ? new Date(row.Timestamp).toLocaleDateString("en-US", {
-          year: "numeric", month: "short", day: "numeric"
-        }) : "—";
-
-        const typeClass = (row["Partnership Type"] || "").toLowerCase().split(" ")[0];
-
+        const date = row.Timestamp ? new Date(row.Timestamp).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—";
+        const tc = (row["Partnership Type"] || "").toLowerCase().split(" ")[0];
         tr.innerHTML = `
           <td>${date}</td>
-          <td>${escapeHtml(row["Full Name"])}</td>
-          <td>${escapeHtml(row["Email"])}</td>
-          <td>${escapeHtml(row["Phone"])}</td>
-          <td>${escapeHtml(row["Church Role"])}</td>
-          <td><span class="tag ${typeClass}">${escapeHtml(row["Partnership Type"])}</span></td>
+          <td>${esc(row["Full Name"])}</td>
+          <td>${esc(row["Email"])}</td>
+          <td>${esc(row["Phone"])}</td>
+          <td>${esc(row["Church Role"])}</td>
+          <td><span class="tag ${tc}">${esc(row["Partnership Type"])}</span></td>
           <td>${row["Investment Amount"] ? "NPR " + Number(row["Investment Amount"]).toLocaleString() : "—"}</td>
-          <td>${escapeHtml(row["Frequency"])}</td>
-          <td title="${escapeHtml(row["Message"])}">${truncate(escapeHtml(row["Message"]), 40)}</td>
-        `;
+          <td>${esc(row["Frequency"])}</td>
+          <td title="${esc(row["Message"])}">${trunc(esc(row["Message"]), 40)}</td>`;
         tbody.appendChild(tr);
       });
-
       loading.style.display = "none";
       empty.style.display = "none";
       table.style.display = "table";
     }
 
-    function escapeHtml(str) {
+    function esc(str) {
       if (str === undefined || str === null || str === "") return "—";
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+      return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
-
-    function truncate(str, n) {
-      if (str === undefined || str === null) return "—";
-      return str.length > n ? str.slice(0, n) + "…" : str;
-    }
+    function trunc(str, n) { return str && str.length > n ? str.slice(0, n) + "…" : str; }
 
     searchInput.addEventListener("input", renderTable);
     filterType.addEventListener("change", renderTable);
 
-    // CSV export
     exportBtn.addEventListener("click", () => {
       if (allData.length === 0) { alert("No data to export."); return; }
-
-      const headers = ["Timestamp", "Full Name", "Email", "Phone", "Address", "Church Role",
-                       "Organization", "Partnership Type", "Investment Amount", "Frequency", "Message", "Signed In"];
-
-      const csvRows = [headers.join(",")];
+      const headers = ["Timestamp","Full Name","Email","Phone","Address","Church Role","Organization","Partnership Type","Investment Amount","Frequency","Message","Signed In"];
+      const rows = [headers.join(",")];
       allData.forEach(row => {
-        const values = headers.map(h => {
-          const v = row[h] === undefined || row[h] === null ? "" : String(row[h]);
-          return `"${v.replace(/"/g, '""')}"`;
-        });
-        csvRows.push(values.join(","));
+        rows.push(headers.map(h => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(","));
       });
-
-      const csv = csvRows.join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "kingdom-partnership-submissions-" + new Date().toISOString().split("T")[0] + ".csv";
-      document.body.appendChild(a);
+      a.download = "kep-submissions-" + new Date().toISOString().split("T")[0] + ".csv";
       a.click();
-      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
+
+    // ============ BLOG ============
+    const publishBtn = document.getElementById("publish-btn");
+    const publishStatus = document.getElementById("publish-status");
+    const postList = document.getElementById("post-list");
+
+    function setPublishStatus(msg, type, linkUrl) {
+      publishStatus.className = "status-msg " + type;
+      if (linkUrl) {
+        publishStatus.innerHTML = msg + ` <a href="${linkUrl}" target="_blank">View post →</a>`;
+      } else {
+        publishStatus.textContent = msg;
+      }
+    }
+
+    publishBtn.addEventListener("click", async () => {
+      const title = document.getElementById("post-title").value.trim();
+      const description = document.getElementById("post-description").value.trim();
+      const body = document.getElementById("post-body").value;
+      const author = document.getElementById("post-author").value.trim();
+      const slug = document.getElementById("post-slug").value.trim();
+
+      if (!title || !body.trim()) {
+        setPublishStatus("Title and content are required.", "error");
+        return;
+      }
+
+      publishBtn.disabled = true;
+      publishBtn.textContent = "Publishing...";
+      publishStatus.className = "status-msg";
+
+      try {
+        const res = await fetch(WORKER_URL + "/api/blog/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description, body, author, slug })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        setPublishStatus(
+          `Post ${data.mode === "updated" ? "updated" : "published"}! It will be live in ~60 seconds.`,
+          "success",
+          data.url
+        );
+
+        // Clear form
+        document.getElementById("post-title").value = "";
+        document.getElementById("post-description").value = "";
+        document.getElementById("post-body").value = "";
+        document.getElementById("post-author").value = "";
+        document.getElementById("post-slug").value = "";
+
+        // Refresh list
+        setTimeout(loadBlogPosts, 1500);
+
+      } catch (err) {
+        setPublishStatus("Error: " + err.message, "error");
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.textContent = "Publish Post";
+      }
+    });
+
+    async function loadBlogPosts() {
+      postList.innerHTML = '<div class="loading-state">Loading posts...</div>';
+      try {
+        const res = await fetch(WORKER_URL + "/api/blog/list");
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        if (!data.posts || data.posts.length === 0) {
+          postList.innerHTML = '<div class="loading-state">No posts yet. Create your first one!</div>';
+          return;
+        }
+
+        postList.innerHTML = "";
+        data.posts.forEach(p => {
+          const div = document.createElement("div");
+          div.className = "post-item";
+          div.innerHTML = `
+            <div class="info">
+              <div class="title">${esc(p.slug)}</div>
+              <div class="slug">/blog/${esc(p.slug)}/</div>
+            </div>
+            <div class="actions">
+              <a href="/blog/${esc(p.slug)}/" target="_blank">View</a>
+              <button class="del" data-slug="${esc(p.slug)}">Delete</button>
+            </div>`;
+          postList.appendChild(div);
+        });
+
+        // Delete handlers
+        postList.querySelectorAll(".del").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const slug = btn.dataset.slug;
+            if (!confirm(`Delete post "${slug}"? This cannot be undone.`)) return;
+            btn.textContent = "Deleting...";
+            btn.disabled = true;
+            try {
+              const res = await fetch(WORKER_URL + "/api/blog/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ slug })
+              });
+              const d = await res.json();
+              if (d.error) throw new Error(d.error);
+              loadBlogPosts();
+            } catch (err) {
+              alert("Delete failed: " + err.message);
+              btn.textContent = "Delete";
+              btn.disabled = false;
+            }
+          });
+        });
+      } catch (err) {
+        postList.innerHTML = `<div class="loading-state">Error: ${esc(err.message)}</div>`;
+      }
+    }
   </script>
+
 </body>
 </html>
