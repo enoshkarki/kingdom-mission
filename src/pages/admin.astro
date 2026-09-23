@@ -1,0 +1,467 @@
+---
+const siteTitle = "Admin Dashboard";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>{siteTitle} | Kingdom Mission</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --black: #0a0a0a;
+      --dark-blue: #0b1d3a;
+      --accent: #4a9eff;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+    }
+    /* ---- Password gate ---- */
+    #gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .gate-card {
+      background: var(--dark-blue);
+      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .gate-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 800; }
+    .gate-card p { opacity: 0.7; font-size: 0.9rem; margin-bottom: 2rem; }
+    .gate-card input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 1rem;
+    }
+    .gate-card input:focus { outline: none; border-color: var(--accent); }
+    .gate-card button {
+      width: 100%;
+      padding: 0.95rem;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: var(--black);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .gate-card button:hover { opacity: 0.9; }
+    #gate-error {
+      color: var(--red);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    /* ---- Dashboard ---- */
+    #dashboard { display: none; }
+    .dash-header {
+      background: var(--dark-blue);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .dash-header h1 { font-size: 1.15rem; font-weight: 700; }
+    .dash-header h1 span { color: var(--accent); }
+    .header-actions { display: flex; gap: 0.75rem; }
+    .btn-sm {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: var(--white);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm.primary { background: var(--accent); color: var(--black); border-color: var(--accent); }
+    .btn-sm.primary:hover { opacity: 0.9; }
+
+    .dash-body { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--dark-blue);
+      padding: 1.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .stat-card .number { font-size: 1.75rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-card .label { opacity: 0.65; font-size: 0.8rem; margin-top: 0.4rem; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .toolbar input, .toolbar select {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .toolbar input { flex: 1; min-width: 200px; }
+    .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--accent); }
+
+    .table-wrap {
+      background: var(--dark-blue);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.88rem;
+    }
+    th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.6;
+      font-weight: 600;
+      background: rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+    }
+    tbody tr:hover { background: rgba(74,158,255,0.04); }
+    tbody tr:last-child td { border-bottom: none; }
+    .empty-state { padding: 4rem 2rem; text-align: center; opacity: 0.6; }
+    .loading-state { padding: 4rem 2rem; text-align: center; opacity: 0.6; }
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(74,158,255,0.15);
+      color: var(--accent);
+    }
+    .tag.financial { background: rgba(34,197,94,0.15); color: var(--green); }
+    .tag.prayer { background: rgba(168,85,247,0.15); color: #a855f7; }
+    .tag.volunteer { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .tag.missionary { background: rgba(239,68,68,0.15); color: var(--red); }
+
+    @media (max-width: 700px) {
+      .dash-body { padding: 1rem; }
+      .dash-header { padding: 1rem; }
+      .stat-card .number { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="gate-card">
+      <h1>Kingdom Mission</h1>
+      <p>Admin Dashboard — Authorized Access Only</p>
+      <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password" />
+      <button id="login-btn">Access Dashboard</button>
+      <div id="gate-error">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <div class="dash-header">
+      <h1>Kingdom<span>Mission</span> — Admin</h1>
+      <div class="header-actions">
+        <button class="btn-sm" id="refresh-btn">↻ Refresh</button>
+        <button class="btn-sm primary" id="export-btn">↓ Export CSV</button>
+        <button class="btn-sm" id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number" id="stat-total">—</div>
+          <div class="label">Total Submissions</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="stat-recent">—</div>
+          <div class="label">Last 7 Days</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="stat-financial">—</div>
+          <div class="label">Financial Partners</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="stat-volunteer">—</div>
+          <div class="label">Volunteer Partners</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input type="text" id="search" placeholder="Search by name, email, phone..." />
+        <select id="filter-type">
+          <option value="">All Partnership Types</option>
+          <option value="Prayer Partner">Prayer Partner</option>
+          <option value="Financial Partner">Financial Partner</option>
+          <option value="Volunteer Partner">Volunteer Partner</option>
+          <option value="Full-Time Missionary">Full-Time Missionary</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <div class="loading-state" id="loading">Loading submissions...</div>
+          <div class="empty-state" id="empty" style="display:none;">No submissions yet.</div>
+          <table id="table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Church Role</th>
+                <th>Partnership</th>
+                <th>Amount</th>
+                <th>Frequency</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    // ⚠️ CHANGE THIS PASSWORD
+    // 1. Go to https://www.base64encode.org
+    // 2. Type your new password → click Encode
+    // 3. Copy the result and paste it below, replacing the current value
+    const ADMIN_PASSWORD_B64 = "S2luZ2RvbU1pc3Npb24yMDI2IQ=="; // default: "KingdomMission2026!"
+
+    // ⚠️ REPLACE with your Apps Script Web App URL (same one used in volunteer.astro)
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzk1-dNORo4pEP5IJ5exnhU6d8zntrtKqnLM_c4Zd2ALXw2vfUavD3Hu9NHzaM5wVs/exec";
+
+    const gate = document.getElementById("gate");
+    const dashboard = document.getElementById("dashboard");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("login-btn");
+    const gateError = document.getElementById("gate-error");
+    const logoutBtn = document.getElementById("logout-btn");
+    const refreshBtn = document.getElementById("refresh-btn");
+    const exportBtn = document.getElementById("export-btn");
+    const searchInput = document.getElementById("search");
+    const filterType = document.getElementById("filter-type");
+    const loading = document.getElementById("loading");
+    const empty = document.getElementById("empty");
+    const table = document.getElementById("table");
+    const tbody = document.getElementById("tbody");
+
+    let allData = [];
+
+    // Check if already logged in this session
+    if (sessionStorage.getItem("km_admin_auth") === "1") {
+      showDashboard();
+    }
+
+    loginBtn.addEventListener("click", tryLogin);
+    passwordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") tryLogin();
+    });
+
+    function tryLogin() {
+      const entered = passwordInput.value;
+      const correct = atob(ADMIN_PASSWORD_B64);
+      if (entered === correct) {
+        sessionStorage.setItem("km_admin_auth", "1");
+        gateError.style.display = "none";
+        showDashboard();
+      } else {
+        gateError.style.display = "block";
+        passwordInput.value = "";
+      }
+    }
+
+    function showDashboard() {
+      gate.style.display = "none";
+      dashboard.style.display = "block";
+      loadData();
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      sessionStorage.removeItem("km_admin_auth");
+      location.reload();
+    });
+
+    refreshBtn.addEventListener("click", loadData);
+
+    async function loadData() {
+      loading.style.display = "block";
+      table.style.display = "none";
+      empty.style.display = "none";
+
+      try {
+        const res = await fetch(APPS_SCRIPT_URL);
+        const data = await res.json();
+        allData = Array.isArray(data) ? data.reverse() : [];
+        updateStats();
+        renderTable();
+      } catch (err) {
+        loading.textContent = "Error loading data. Check console.";
+        console.error(err);
+      }
+    }
+
+    function updateStats() {
+      document.getElementById("stat-total").textContent = allData.length;
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const recent = allData.filter(r => new Date(r.Timestamp) > sevenDaysAgo);
+      document.getElementById("stat-recent").textContent = recent.length;
+
+      const financial = allData.filter(r => r["Partnership Type"] === "Financial Partner");
+      document.getElementById("stat-financial").textContent = financial.length;
+
+      const volunteer = allData.filter(r => r["Partnership Type"] === "Volunteer Partner");
+      document.getElementById("stat-volunteer").textContent = volunteer.length;
+    }
+
+    function renderTable() {
+      const search = searchInput.value.toLowerCase().trim();
+      const typeFilter = filterType.value;
+
+      const filtered = allData.filter(row => {
+        const matchesSearch = !search ||
+          (row["Full Name"] || "").toLowerCase().includes(search) ||
+          (row["Email"] || "").toLowerCase().includes(search) ||
+          (row["Phone"] || "").toString().toLowerCase().includes(search);
+        const matchesType = !typeFilter || row["Partnership Type"] === typeFilter;
+        return matchesSearch && matchesType;
+      });
+
+      if (filtered.length === 0) {
+        loading.style.display = "none";
+        table.style.display = "none";
+        empty.style.display = "block";
+        empty.textContent = allData.length === 0 ? "No submissions yet." : "No matches for your search.";
+        return;
+      }
+
+      tbody.innerHTML = "";
+      filtered.forEach(row => {
+        const tr = document.createElement("tr");
+
+        const date = row.Timestamp ? new Date(row.Timestamp).toLocaleDateString("en-US", {
+          year: "numeric", month: "short", day: "numeric"
+        }) : "—";
+
+        const typeClass = (row["Partnership Type"] || "").toLowerCase().split(" ")[0];
+
+        tr.innerHTML = `
+          <td>${date}</td>
+          <td>${escapeHtml(row["Full Name"])}</td>
+          <td>${escapeHtml(row["Email"])}</td>
+          <td>${escapeHtml(row["Phone"])}</td>
+          <td>${escapeHtml(row["Church Role"])}</td>
+          <td><span class="tag ${typeClass}">${escapeHtml(row["Partnership Type"])}</span></td>
+          <td>${row["Investment Amount"] ? "NPR " + Number(row["Investment Amount"]).toLocaleString() : "—"}</td>
+          <td>${escapeHtml(row["Frequency"])}</td>
+          <td title="${escapeHtml(row["Message"])}">${truncate(escapeHtml(row["Message"]), 40)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      loading.style.display = "none";
+      empty.style.display = "none";
+      table.style.display = "table";
+    }
+
+    function escapeHtml(str) {
+      if (str === undefined || str === null || str === "") return "—";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function truncate(str, n) {
+      if (str === undefined || str === null) return "—";
+      return str.length > n ? str.slice(0, n) + "…" : str;
+    }
+
+    searchInput.addEventListener("input", renderTable);
+    filterType.addEventListener("change", renderTable);
+
+    // CSV export
+    exportBtn.addEventListener("click", () => {
+      if (allData.length === 0) { alert("No data to export."); return; }
+
+      const headers = ["Timestamp", "Full Name", "Email", "Phone", "Address", "Church Role",
+                       "Organization", "Partnership Type", "Investment Amount", "Frequency", "Message", "Signed In"];
+
+      const csvRows = [headers.join(",")];
+      allData.forEach(row => {
+        const values = headers.map(h => {
+          const v = row[h] === undefined || row[h] === null ? "" : String(row[h]);
+          return `"${v.replace(/"/g, '""')}"`;
+        });
+        csvRows.push(values.join(","));
+      });
+
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "kingdom-partnership-submissions-" + new Date().toISOString().split("T")[0] + ".csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
