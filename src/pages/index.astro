@@ -1,0 +1,228 @@
+---
+const siteTitle = "Kingdom Expansion Mission";
+const tagline = "Raising young volunteers and skilled professionals for God's Kingdom";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{siteTitle}</title>
+  <meta name="description" content={tagline} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --black: #0a0a0a;
+      --dark-blue: #0b1d3a;
+      --light-blue: #1e3a5f;
+      --accent: #4a9eff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+    header {
+      background: var(--dark-blue);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    nav { display: flex; align-items: center; }
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 2rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      opacity: 0.85;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    nav a:hover { opacity: 1; color: var(--accent); }
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(74, 158, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(11, 29, 58, 0.9) 0%, transparent 50%),
+        linear-gradient(135deg, var(--dark-blue) 0%, var(--black) 100%);
+    }
+    .hero .eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.75rem);
+      font-weight: 800;
+      max-width: 850px;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 620px;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+    }
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.95rem 2.25rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--black);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(74, 158, 255, 0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .verse-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .verse-section blockquote {
+      font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+      font-style: italic;
+      max-width: 800px;
+      margin: 0 auto 1rem;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+    .verse-section cite {
+      font-size: 0.95rem;
+      color: var(--accent);
+      font-style: normal;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    footer {
+      background: var(--dark-blue);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.6;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      transition: transform 0.2s;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    .whatsapp-float svg { width: 28px; height: 28px; fill: #fff; }
+    @media (max-width: 700px) {
+      header { padding: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+      nav { flex-wrap: wrap; }
+      nav a { margin-left: 1rem; font-size: 0.85rem; }
+      .hero h1 { font-size: 1.9rem; }
+      .hero p { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">Kingdom<span>Mission</span></a>
+    <nav>
+      <a href="/about">About</a>
+      <a href="/mission">Mission</a>
+      <a href="/volunteer">Volunteer</a>
+      <a href="/blog">Blog</a>
+      <a href="/give">Give</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Kingdom Expansion Partnership</div>
+    <h1>Raising <span>Kingdom Builders</span> for God's Mission</h1>
+    <p>
+      {tagline}. Join young volunteers and skilled professionals who are
+      investing their time, talent, and treasure into the expansion of God's Kingdom.
+    </p>
+    <div class="cta-group">
+      <a href="/volunteer" class="btn btn-primary">Become a Partner</a>
+      <a href="/mission" class="btn btn-outline">Learn More</a>
+    </div>
+  </section>
+
+  <section class="verse-section">
+    <blockquote>
+      "For the earth will be filled with the knowledge of the glory of the LORD
+      as the waters cover the sea."
+    </blockquote>
+    <cite>Habakkuk 2:14</cite>
+  </section>
+
+  <footer>
+    &copy; {new Date().getFullYear()} Kingdom Expansion Mission. All rights reserved.
+  </footer>
+
+  <a href="https://wa.me/9779807363328" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+</body>
+</html>
