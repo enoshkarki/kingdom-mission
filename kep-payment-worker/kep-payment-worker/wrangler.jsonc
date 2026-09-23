@@ -14,6 +14,9 @@
     "KHALTI_SECRET_KEY": "REPLACE_WITH_YOUR_KHALTI_TEST_KEY",
     "KHALTI_GATEWAY_URL": "https://a.khalti.com/api/v2/epayment/initiate/",
     "KHALTI_RETURN_URL": "https://kingdom-mission.enosh-emails.workers.dev/give/success",
-    "KHALTI_WEBSITE_URL": "https://kingdom-mission.enosh-emails.workers.dev"
+    "KHALTI_WEBSITE_URL": "https://kingdom-mission.enosh-emails.workers.dev",
+    "GITHUB_OWNER": "enoshkarki",
+    "GITHUB_REPO": "kingdom-mission",
+    "SITE_URL": "https://kingdom-mission.enosh-emails.workers.dev"
   }
 }

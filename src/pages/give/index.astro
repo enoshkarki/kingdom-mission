@@ -54,19 +54,31 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
 
     header {
       position: sticky; top: 0; z-index: 100;
-      padding: 1rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.85rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1.5rem;
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
       background: rgba(5, 8, 16, 0.55);
       border-bottom: 1px solid var(--border);
     }
-    .brand { display: flex; align-items: center; text-decoration: none; }
+    .brand { display: flex; align-items: center; text-decoration: none; justify-self: start; }
     .brand img { height: 38px; width: auto; display: block; }
-    nav { display: flex; align-items: center; gap: 0.25rem; }
-    nav a { color: var(--text-dim); text-decoration: none; padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease; }
+    nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; justify-self: center; }
+    nav a { color: var(--text-dim); text-decoration: none; padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease; white-space: nowrap; }
     nav a:hover { color: var(--text); background: rgba(120, 170, 255, 0.08); }
-    nav a.cta { background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%); color: #fff; margin-left: 0.75rem; box-shadow: 0 4px 20px rgba(74, 158, 255, 0.25); }
+    .header-cta { justify-self: end; padding: 0.6rem 1.35rem; border-radius: 10px; background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%); color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 20px rgba(74, 158, 255, 0.25); transition: all 0.2s ease; white-space: nowrap; }
+    .header-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(74, 158, 255, 0.4); }
+
+    @media (max-width: 900px) {
+      header { grid-template-columns: 1fr; gap: 0.75rem; padding: 0.85rem 1rem; }
+      .brand { justify-self: center; }
+      nav { justify-self: center; flex-wrap: wrap; justify-content: center; width: 100%; gap: 0.15rem; }
+      nav a { padding: 0.45rem 0.75rem; font-size: 0.82rem; }
+      .header-cta { justify-self: center; padding: 0.5rem 1.1rem; font-size: 0.82rem; }
+    }
 
     .page-hero { padding: 5rem 2rem 2rem; text-align: center; position: relative; z-index: 1; }
     .eyebrow {
@@ -92,10 +104,7 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
       animation: gradShift 6s ease infinite;
     }
     @keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .page-hero .verse {
-      font-style: italic; color: var(--text-dim); font-size: 1rem;
-      max-width: 620px; margin: 1.5rem auto 0;
-    }
+    .page-hero .verse { font-style: italic; color: var(--text-dim); font-size: 1rem; max-width: 620px; margin: 1.5rem auto 0; }
 
     .content { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 6rem; position: relative; z-index: 1; }
 
@@ -109,222 +118,56 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
       position: relative;
       overflow: hidden;
     }
-    .glass::before {
-      content: "";
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.5), transparent);
-    }
+    .glass::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.5), transparent); }
 
-    .amount-selector {
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-    .amount-selector label {
-      display: block;
-      font-size: 0.85rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-    }
-    .amount-chips {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-    .chip {
-      padding: 0.85rem;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(5, 8, 16, 0.5);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .amount-selector { padding: 2rem; margin-bottom: 2rem; }
+    .amount-selector label { display: block; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; color: var(--text-dim); margin-bottom: 1rem; }
+    .amount-chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.6rem; margin-bottom: 1rem; }
+    .chip { padding: 0.85rem; border-radius: 12px; border: 1px solid var(--border); background: rgba(5, 8, 16, 0.5); color: var(--text); font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .chip:hover { border-color: rgba(74, 158, 255, 0.4); }
-    .chip.active {
-      border-color: var(--blue-bright);
-      background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(124, 58, 237, 0.1));
-      color: var(--cyan);
-    }
-    .custom-amount {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 1rem;
-    }
-    .custom-amount span {
-      color: var(--text-dim);
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    .custom-amount input {
-      flex: 1;
-      padding: 0.85rem 1.1rem;
-      border-radius: 12px;
-      border: 1px solid rgba(120, 170, 255, 0.15);
-      background: rgba(5, 8, 16, 0.5);
-      color: var(--text);
-      font-size: 1rem;
-      font-family: inherit;
-    }
-    .custom-amount input:focus {
-      outline: none;
-      border-color: var(--blue-bright);
-      box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.1);
-    }
+    .chip.active { border-color: var(--blue-bright); background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(124, 58, 237, 0.1)); color: var(--cyan); }
+    .custom-amount { display: flex; align-items: center; gap: 0.6rem; margin-top: 1rem; }
+    .custom-amount span { color: var(--text-dim); font-weight: 600; font-size: 1rem; }
+    .custom-amount input { flex: 1; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1px solid rgba(120, 170, 255, 0.15); background: rgba(5, 8, 16, 0.5); color: var(--text); font-size: 1rem; font-family: inherit; }
+    .custom-amount input:focus { outline: none; border-color: var(--blue-bright); box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.1); }
 
-    .payment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
+    .payment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
     .payment-card { padding: 2rem; text-align: center; transition: all 0.3s; }
     .payment-card:hover { transform: translateY(-4px); border-color: rgba(74, 158, 255, 0.3); }
-    .gateway-logo {
-      width: 80px; height: 80px;
-      border-radius: 20px;
-      margin: 0 auto 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Sora', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -1px;
-    }
+    .gateway-logo { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: -1px; }
     .gateway-logo.esewa { background: linear-gradient(135deg, #60bb46 0%, #3d8b2a 100%); box-shadow: 0 8px 24px rgba(96, 187, 70, 0.3); }
     .gateway-logo.khalti { background: linear-gradient(135deg, #5c2d91 0%, #3d1d61 100%); box-shadow: 0 8px 24px rgba(92, 45, 145, 0.3); }
-    .payment-card h3 {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.3px;
-    }
-    .payment-card p {
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-    }
-    .pay-btn {
-      width: 100%;
-      padding: 1rem;
-      border-radius: 12px;
-      border: none;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    .pay-btn.esewa {
-      background: linear-gradient(135deg, #60bb46 0%, #3d8b2a 100%);
-      color: #fff;
-      box-shadow: 0 8px 24px rgba(96, 187, 70, 0.25);
-    }
-    .pay-btn.khalti {
-      background: linear-gradient(135deg, #5c2d91 0%, #3d1d61 100%);
-      color: #fff;
-      box-shadow: 0 8px 24px rgba(92, 45, 145, 0.25);
-    }
+    .payment-card h3 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .payment-card p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .pay-btn { width: 100%; padding: 1rem; border-radius: 12px; border: none; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .pay-btn.esewa { background: linear-gradient(135deg, #60bb46 0%, #3d8b2a 100%); color: #fff; box-shadow: 0 8px 24px rgba(96, 187, 70, 0.25); }
+    .pay-btn.khalti { background: linear-gradient(135deg, #5c2d91 0%, #3d1d61 100%); color: #fff; box-shadow: 0 8px 24px rgba(92, 45, 145, 0.25); }
     .pay-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(74, 158, 255, 0.4); }
     .pay-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    .status-message {
-      margin-top: 1rem;
-      font-size: 0.88rem;
-      min-height: 1.2rem;
-    }
+    .status-message { margin-top: 1rem; font-size: 0.88rem; min-height: 1.2rem; }
     .status-message.error { color: var(--red); }
     .status-message.success { color: var(--green); }
 
-    .note {
-      padding: 1.5rem;
-      margin-top: 2rem;
-      border-left: 3px solid var(--blue-bright);
-      border-radius: 0 12px 12px 0;
-      background: rgba(74, 158, 255, 0.06);
-      font-size: 0.9rem;
-      color: var(--text-dim);
-    }
+    .note { padding: 1.5rem; margin-top: 2rem; border-left: 3px solid var(--blue-bright); border-radius: 0 12px 12px 0; background: rgba(74, 158, 255, 0.06); font-size: 0.9rem; color: var(--text-dim); }
     .note strong { color: var(--text); }
 
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin: 3rem 0 2rem;
-    }
+    .impact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 3rem 0 2rem; }
     .impact-card { padding: 1.5rem; text-align: center; }
-    .impact-card .amount {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.4rem;
-      line-height: 1;
-    }
+    .impact-card .amount { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.4rem; line-height: 1; }
     .impact-card .desc { color: var(--text-dim); font-size: 0.88rem; }
 
-    .section-eyebrow {
-      display: inline-block;
-      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
-      font-weight: 700; color: var(--cyan);
-      margin-bottom: 0.75rem;
-      margin-top: 2rem;
-    }
-    h2.section-title {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(1.5rem, 3vw, 2.25rem);
-      font-weight: 700; letter-spacing: -0.75px;
-      line-height: 1.2; margin-bottom: 1rem;
-    }
-    h2.section-title .grad {
-      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    .section-eyebrow { display: inline-block; font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; color: var(--cyan); margin-bottom: 0.75rem; margin-top: 2rem; }
+    h2.section-title { font-family: 'Sora', sans-serif; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; letter-spacing: -0.75px; line-height: 1.2; margin-bottom: 1rem; }
+    h2.section-title .grad { background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
     .verse-block { text-align: center; padding: 3rem 2rem; margin: 3rem 0; }
-    .verse-block blockquote {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-      font-style: italic; font-weight: 400;
-      line-height: 1.5; letter-spacing: -0.3px;
-      max-width: 780px; margin: 0 auto 1rem;
-      color: var(--text);
-    }
-    .verse-block cite {
-      font-style: normal; font-size: 0.82rem;
-      letter-spacing: 3px; text-transform: uppercase;
-      font-weight: 600; color: var(--blue-bright);
-    }
+    .verse-block blockquote { font-family: 'Sora', sans-serif; font-size: clamp(1.1rem, 2.2vw, 1.5rem); font-style: italic; font-weight: 400; line-height: 1.5; letter-spacing: -0.3px; max-width: 780px; margin: 0 auto 1rem; color: var(--text); }
+    .verse-block cite { font-style: normal; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; color: var(--blue-bright); }
 
-    footer {
-      padding: 2rem; text-align: center;
-      border-top: 1px solid var(--border);
-      color: var(--text-faint); font-size: 0.85rem;
-    }
+    footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-faint); font-size: 0.85rem; }
 
     @media (max-width: 700px) {
-      header { padding: 0.85rem 1rem; }
-      nav a { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
-      nav a.cta { margin-left: 0.25rem; padding: 0.5rem 0.9rem; }
       .page-hero { padding: 3.5rem 1.25rem 1.5rem; }
       .content { padding: 1.5rem 1.25rem 4rem; }
       .glass { padding: 1.5rem; border-radius: 16px; }
@@ -350,8 +193,8 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
       <a href="/mission">Mission</a>
       <a href="/blog">Blog</a>
       <a href="/give">Give</a>
-      <a href="/volunteer" class="cta">Become a Partner</a>
     </nav>
+    <a href="/volunteer" class="header-cta">Become a Partner</a>
   </header>
 
   <section class="page-hero">
@@ -468,7 +311,6 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
       el.className = "status-message " + (type || "");
     }
 
-    // eSewa handler
     document.getElementById("esewa-btn").addEventListener("click", async () => {
       const btn = document.getElementById("esewa-btn");
       const amount = customAmount.value ? Number(customAmount.value) : selectedAmount;
@@ -492,7 +334,6 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        // Create hidden form and submit to eSewa
         const form = document.createElement("form");
         form.method = "POST";
         form.action = data.action_url;
@@ -513,7 +354,6 @@ const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
       }
     });
 
-    // Khalti handler
     document.getElementById("khalti-btn").addEventListener("click", async () => {
       const btn = document.getElementById("khalti-btn");
       const amount = customAmount.value ? Number(customAmount.value) : selectedAmount;

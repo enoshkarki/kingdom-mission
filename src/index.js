@@ -1,5 +1,5 @@
 // ============================================
-// KEP Worker — Payments + Blog Publisher
+// KEP Worker — Payments + Blog Publisher + Debug
 // ============================================
 
 const CORS_HEADERS = {
@@ -28,7 +28,6 @@ function slugify(str) {
     .replace(/^-|-$/g, "");
 }
 
-// Base64-encode UTF-8 safely (supports Nepali + emojis)
 function b64EncodeUtf8(str) {
   const bytes = new TextEncoder().encode(str);
   let binary = "";
@@ -58,6 +57,8 @@ export default {
           "/api/blog/list",
           "/api/blog/create",
           "/api/blog/delete",
+          "/api/blog/debug",
+          "/api/blog/test-github",
         ],
       });
     }
@@ -65,12 +66,59 @@ export default {
     if (path === "/api/esewa/initiate" && request.method === "POST") return handleEsewa(request, env);
     if (path === "/api/khalti/initiate" && request.method === "POST") return handleKhalti(request, env);
 
-    // Blog endpoints
     if (path === "/api/blog/list" && request.method === "GET") return handleBlogList(request, env);
     if (path === "/api/blog/create" && request.method === "POST") return handleBlogCreate(request, env);
     if (path === "/api/blog/delete" && request.method === "POST") return handleBlogDelete(request, env);
 
-    return jsonResponse({ error: "Not found" }, 404);
+    if (path === "/api/blog/debug" && request.method === "GET") {
+      const token = env.GITHUB_TOKEN || "";
+      return jsonResponse({
+        token_set: !!env.GITHUB_TOKEN,
+        token_length: token.length,
+        token_prefix: token ? token.substring(0, 12) + "..." : null,
+        token_type: token.startsWith("ghp_") ? "classic" : token.startsWith("github_pat_") ? "fine-grained" : "unknown",
+        owner: env.GITHUB_OWNER || null,
+        repo: env.GITHUB_REPO || null,
+        site_url: env.SITE_URL || null,
+      });
+    }
+
+    if (path === "/api/blog/test-github" && request.method === "GET") {
+      try {
+        const testUrl = `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}`;
+        const headers = githubHeaders(env);
+
+        const res = await fetch(testUrl, { headers });
+        const text = await res.text();
+
+        let parsed = null;
+        try { parsed = JSON.parse(text); } catch (e) { /* ignore */ }
+
+        const token = env.GITHUB_TOKEN || "";
+        return jsonResponse({
+          request_url: testUrl,
+          token_present: !!env.GITHUB_TOKEN,
+          token_length: token.length,
+          token_first_5: token ? token.substring(0, 5) : null,
+          token_last_5: token ? token.slice(-5) : null,
+          token_type: token.startsWith("ghp_") ? "classic" : token.startsWith("github_pat_") ? "fine-grained" : "unknown",
+          has_whitespace: /\s/.test(token),
+          github_status: res.status,
+          github_ok: res.ok,
+          response_length: text.length,
+          response_preview: text.substring(0, 500),
+          parsed: parsed,
+        });
+      } catch (err) {
+        return jsonResponse({
+          error: err.message,
+          stack: err.stack,
+          type: "fetch-or-parse-error",
+        }, 500);
+      }
+    }
+
+    return jsonResponse({ error: "Not found", path }, 404);
   },
 };
 
@@ -158,11 +206,14 @@ async function handleKhalti(request, env) {
 }
 
 // ============================================
-// BLOG — helpers
+// BLOG helpers
 // ============================================
 function githubHeaders(env) {
+  const token = env.GITHUB_TOKEN || "";
+  // Classic tokens (ghp_) use "token"; fine-grained (github_pat_) use "Bearer"
+  const authPrefix = token.startsWith("ghp_") ? "token" : "Bearer";
   return {
-    "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
+    "Authorization": `${authPrefix} ${token}`,
     "User-Agent": "KEP-Blog-Admin",
     "Accept": "application/vnd.github+json",
     "Content-Type": "application/json",
@@ -173,7 +224,6 @@ function blogPath(env, slug) {
   return `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/src/content/blog/${slug}.md`;
 }
 
-// GET — list all posts
 async function handleBlogList(request, env) {
   try {
     if (!env.GITHUB_TOKEN) return jsonResponse({ error: "GITHUB_TOKEN not configured" }, 500);
@@ -182,8 +232,8 @@ async function handleBlogList(request, env) {
     const res = await fetch(url, { headers: githubHeaders(env) });
 
     if (!res.ok) {
-      const err = await res.json();
-      return jsonResponse({ error: err.message || "Failed to list posts" }, res.status);
+      const err = await res.json().catch(() => ({}));
+      return jsonResponse({ error: err.message || "Failed to list posts", status: res.status }, res.status);
     }
 
     const files = await res.json();
@@ -200,14 +250,14 @@ async function handleBlogList(request, env) {
 
     return jsonResponse({ posts });
   } catch (err) {
-    return jsonResponse({ error: err.message }, 500);
+    return jsonResponse({ error: err.message, stack: err.stack }, 500);
   }
 }
 
-// POST — create or update a post
 async function handleBlogCreate(request, env) {
   try {
     if (!env.GITHUB_TOKEN) return jsonResponse({ error: "GITHUB_TOKEN not configured" }, 500);
+    if (!env.GITHUB_OWNER || !env.GITHUB_REPO) return jsonResponse({ error: "GITHUB_OWNER or GITHUB_REPO missing" }, 500);
 
     const body = await request.json();
     const { title, description, body: content, author, slug: providedSlug } = body;
@@ -232,12 +282,15 @@ author: "${finalAuthor}"
 ${content}
 `;
 
-    // Check if file already exists
-    const checkRes = await fetch(blogPath(env, finalSlug), { headers: githubHeaders(env) });
     let sha = undefined;
-    if (checkRes.ok) {
-      const existing = await checkRes.json();
-      sha = existing.sha;
+    try {
+      const checkRes = await fetch(blogPath(env, finalSlug), { headers: githubHeaders(env) });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch (checkErr) {
+      // ignore
     }
 
     const payload = {
@@ -253,26 +306,29 @@ ${content}
       body: JSON.stringify(payload),
     });
 
-    if (!res.ok) {
-      const err = await res.json();
-      return jsonResponse({ error: err.message || "GitHub commit failed" }, res.status);
-    }
+    const data = await res.json().catch(() => ({}));
 
-    const data = await res.json();
+    if (!res.ok) {
+      return jsonResponse({
+        error: data.message || "GitHub commit failed",
+        github_status: res.status,
+        github_details: data,
+        slug: finalSlug,
+      }, res.status);
+    }
 
     return jsonResponse({
       success: true,
       slug: finalSlug,
       url: `${env.SITE_URL || ""}/blog/${finalSlug}/`,
-      commit: data.commit?.sha,
+      commit: data.commit ? data.commit.sha : null,
       mode: sha ? "updated" : "created",
     });
   } catch (err) {
-    return jsonResponse({ error: err.message }, 500);
+    return jsonResponse({ error: err.message || "Blog create failed", stack: err.stack }, 500);
   }
 }
 
-// POST — delete a post
 async function handleBlogDelete(request, env) {
   try {
     if (!env.GITHUB_TOKEN) return jsonResponse({ error: "GITHUB_TOKEN not configured" }, 500);
@@ -280,7 +336,6 @@ async function handleBlogDelete(request, env) {
     const { slug } = await request.json();
     if (!slug) return jsonResponse({ error: "Slug is required" }, 400);
 
-    // Get current file to find its sha
     const checkRes = await fetch(blogPath(env, slug), { headers: githubHeaders(env) });
     if (!checkRes.ok) return jsonResponse({ error: "Post not found" }, 404);
     const existing = await checkRes.json();
@@ -296,12 +351,12 @@ async function handleBlogDelete(request, env) {
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      return jsonResponse({ error: err.message || "Delete failed" }, res.status);
+      const err = await res.json().catch(() => ({}));
+      return jsonResponse({ error: err.message || "Delete failed", github_status: res.status, details: err }, res.status);
     }
 
     return jsonResponse({ success: true, slug });
   } catch (err) {
-    return jsonResponse({ error: err.message }, 500);
+    return jsonResponse({ error: err.message, stack: err.stack }, 500);
   }
 }
