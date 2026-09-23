@@ -1,0 +1,61 @@
+---
+const siteTitle = "Payment Issue";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{siteTitle} | Kingdom Expansion Partnership</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#050810; --blue-bright:#4a9eff; --cyan:#22d3ee; --text:#e8eefc; --text-dim:rgba(232,238,252,0.65); --border:rgba(120,170,255,0.12); --red:#ef4444; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;overflow-x:hidden;position:relative;}
+    body::before{content:"";position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");background-size:220px 220px;}
+    .fluid-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+    .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.4;}
+    .blob-1{width:520px;height:520px;top:-120px;left:-100px;background:radial-gradient(circle,#ef4444 0%,#1a3a6e 55%,transparent 75%);}
+    .blob-2{width:600px;height:600px;bottom:-180px;right:-180px;background:radial-gradient(circle,#7c3aed 0%,#0b1d3a 60%,transparent 78%);}
+
+    .card{
+      max-width:560px;width:100%;text-align:center;
+      background:linear-gradient(135deg,rgba(120,170,255,0.06),rgba(120,170,255,0.02));
+      border:1px solid var(--border);border-radius:24px;
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      padding:3.5rem 2.5rem;position:relative;overflow:hidden;
+      z-index:1;
+    }
+    .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,0.5),transparent);}
+    .icon{
+      width:80px;height:80px;border-radius:50%;
+      background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(124,58,237,0.15));
+      border:1px solid rgba(239,68,68,0.4);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 1.75rem;font-size:2.25rem;
+    }
+    h1{font-family:'Sora',sans-serif;font-size:clamp(1.75rem,4vw,2.5rem);font-weight:700;letter-spacing:-0.75px;line-height:1.15;margin-bottom:1rem;}
+    h1 .grad{background:linear-gradient(120deg,#ef4444 0%,#7c3aed 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+    p{color:var(--text-dim);font-size:1.02rem;margin-bottom:0.75rem;}
+    .btn{display:inline-block;margin-top:2.25rem;padding:0.95rem 2rem;background:linear-gradient(135deg,#4a9eff 0%,#7c3aed 100%);color:#fff;text-decoration:none;border-radius:12px;font-weight:600;font-size:0.95rem;box-shadow:0 8px 32px rgba(74,158,255,0.3);transition:transform 0.2s;}
+    .btn:hover{transform:translateY(-2px);}
+    .btn-ghost{background:transparent;border:1px solid var(--border);box-shadow:none;margin-left:0.5rem;color:var(--text);}
+  </style>
+</head>
+<body>
+  <div class="fluid-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="card">
+    <div class="icon">⚠</div>
+    <h1>Payment <span class="grad">Not Completed</span></h1>
+    <p>Something interrupted your gift.</p>
+    <p>No amount has been charged. You can try again or contact us if you need help.</p>
+    <a href="/give" class="btn">Try Again</a>
+    <a href="/" class="btn btn-ghost">Home</a>
+  </div>
+</body>
+</html>

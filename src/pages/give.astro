@@ -1,0 +1,555 @@
+---
+const siteTitle = "Give";
+const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{siteTitle} | Kingdom Expansion Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050810;
+      --blue-bright: #4a9eff;
+      --cyan: #22d3ee;
+      --violet: #7c3aed;
+      --text: #e8eefc;
+      --text-dim: rgba(232, 238, 252, 0.65);
+      --text-faint: rgba(232, 238, 252, 0.4);
+      --border: rgba(120, 170, 255, 0.12);
+      --red: #ef4444;
+      --green: #22c55e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 1000;
+      pointer-events: none; opacity: 0.35; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
+    }
+    .fluid-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; will-change: transform; }
+    .blob-1 { width: 520px; height: 520px; top: -120px; left: -100px; background: radial-gradient(circle, #4a9eff 0%, #1a3a6e 55%, transparent 75%); animation: float1 22s ease-in-out infinite; }
+    .blob-2 { width: 600px; height: 600px; top: 35%; right: -180px; background: radial-gradient(circle, #7c3aed 0%, #0b1d3a 60%, transparent 78%); animation: float2 28s ease-in-out infinite; }
+    .blob-3 { width: 480px; height: 480px; bottom: -100px; left: 20%; background: radial-gradient(circle, #22d3ee 0%, #1a3a6e 55%, transparent 78%); opacity: 0.35; animation: float3 26s ease-in-out infinite; }
+    @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(80px, 60px) scale(1.1); } }
+    @keyframes float2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-100px, 80px) scale(1.08); } }
+    @keyframes float3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px, -80px) scale(1.15); } }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: rgba(5, 8, 16, 0.55);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; text-decoration: none; }
+    .brand img { height: 38px; width: auto; display: block; }
+    nav { display: flex; align-items: center; gap: 0.25rem; }
+    nav a { color: var(--text-dim); text-decoration: none; padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease; }
+    nav a:hover { color: var(--text); background: rgba(120, 170, 255, 0.08); }
+    nav a.cta { background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%); color: #fff; margin-left: 0.75rem; box-shadow: 0 4px 20px rgba(74, 158, 255, 0.25); }
+
+    .page-hero { padding: 5rem 2rem 2rem; text-align: center; position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 1rem; border-radius: 100px;
+      background: rgba(74, 158, 255, 0.08);
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      font-size: 0.75rem; letter-spacing: 2.5px; text-transform: uppercase;
+      font-weight: 600; color: var(--cyan);
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+    .page-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700; line-height: 1.1; letter-spacing: -1.5px;
+      max-width: 900px; margin: 0 auto 1.25rem;
+    }
+    .page-hero h1 .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 50%, #7c3aed 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradShift 6s ease infinite;
+    }
+    @keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .page-hero .verse {
+      font-style: italic; color: var(--text-dim); font-size: 1rem;
+      max-width: 620px; margin: 1.5rem auto 0;
+    }
+
+    .content { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 6rem; position: relative; z-index: 1; }
+
+    .glass {
+      background: linear-gradient(135deg, rgba(120, 170, 255, 0.06) 0%, rgba(120, 170, 255, 0.02) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass::before {
+      content: "";
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.5), transparent);
+    }
+
+    .amount-selector {
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .amount-selector label {
+      display: block;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .amount-chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .chip {
+      padding: 0.85rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(5, 8, 16, 0.5);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: rgba(74, 158, 255, 0.4); }
+    .chip.active {
+      border-color: var(--blue-bright);
+      background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(124, 58, 237, 0.1));
+      color: var(--cyan);
+    }
+    .custom-amount {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .custom-amount span {
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .custom-amount input {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 170, 255, 0.15);
+      background: rgba(5, 8, 16, 0.5);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .custom-amount input:focus {
+      outline: none;
+      border-color: var(--blue-bright);
+      box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.1);
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .payment-card { padding: 2rem; text-align: center; transition: all 0.3s; }
+    .payment-card:hover { transform: translateY(-4px); border-color: rgba(74, 158, 255, 0.3); }
+    .gateway-logo {
+      width: 80px; height: 80px;
+      border-radius: 20px;
+      margin: 0 auto 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+    .gateway-logo.esewa { background: linear-gradient(135deg, #60bb46 0%, #3d8b2a 100%); box-shadow: 0 8px 24px rgba(96, 187, 70, 0.3); }
+    .gateway-logo.khalti { background: linear-gradient(135deg, #5c2d91 0%, #3d1d61 100%); box-shadow: 0 8px 24px rgba(92, 45, 145, 0.3); }
+    .payment-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+    .payment-card p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .pay-btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .pay-btn.esewa {
+      background: linear-gradient(135deg, #60bb46 0%, #3d8b2a 100%);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(96, 187, 70, 0.25);
+    }
+    .pay-btn.khalti {
+      background: linear-gradient(135deg, #5c2d91 0%, #3d1d61 100%);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(92, 45, 145, 0.25);
+    }
+    .pay-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(74, 158, 255, 0.4); }
+    .pay-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .status-message {
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      min-height: 1.2rem;
+    }
+    .status-message.error { color: var(--red); }
+    .status-message.success { color: var(--green); }
+
+    .note {
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border-left: 3px solid var(--blue-bright);
+      border-radius: 0 12px 12px 0;
+      background: rgba(74, 158, 255, 0.06);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+    .note strong { color: var(--text); }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 3rem 0 2rem;
+    }
+    .impact-card { padding: 1.5rem; text-align: center; }
+    .impact-card .amount {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+      line-height: 1;
+    }
+    .impact-card .desc { color: var(--text-dim); font-size: 0.88rem; }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+      font-weight: 700; color: var(--cyan);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+    h2.section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700; letter-spacing: -0.75px;
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    h2.section-title .grad {
+      background: linear-gradient(120deg, #4a9eff 0%, #22d3ee 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .verse-block { text-align: center; padding: 3rem 2rem; margin: 3rem 0; }
+    .verse-block blockquote {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-style: italic; font-weight: 400;
+      line-height: 1.5; letter-spacing: -0.3px;
+      max-width: 780px; margin: 0 auto 1rem;
+      color: var(--text);
+    }
+    .verse-block cite {
+      font-style: normal; font-size: 0.82rem;
+      letter-spacing: 3px; text-transform: uppercase;
+      font-weight: 600; color: var(--blue-bright);
+    }
+
+    footer {
+      padding: 2rem; text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-faint); font-size: 0.85rem;
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 0.85rem 1rem; }
+      nav a { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
+      nav a.cta { margin-left: 0.25rem; padding: 0.5rem 0.9rem; }
+      .page-hero { padding: 3.5rem 1.25rem 1.5rem; }
+      .content { padding: 1.5rem 1.25rem 4rem; }
+      .glass { padding: 1.5rem; border-radius: 16px; }
+      .amount-chips { grid-template-columns: repeat(2, 1fr); }
+      .payment-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="fluid-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header>
+    <a href="/" class="brand">
+      <img src="/kep-logo.png" alt="Kingdom Expansion Partnership" />
+    </a>
+    <nav>
+      <a href="/about">About</a>
+      <a href="/mission">Mission</a>
+      <a href="/blog">Blog</a>
+      <a href="/give">Give</a>
+      <a href="/volunteer" class="cta">Become a Partner</a>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <div class="eyebrow">Give</div>
+    <h1>Invest in <span class="grad">God's Kingdom</span></h1>
+    <p class="verse">
+      "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver." — 2 Corinthians 9:7
+    </p>
+  </section>
+
+  <div class="content">
+
+    <div class="glass amount-selector">
+      <label>Choose your gift amount (NPR)</label>
+      <div class="amount-chips">
+        <button class="chip" data-amount="500">Rs 500</button>
+        <button class="chip active" data-amount="1000">Rs 1,000</button>
+        <button class="chip" data-amount="2500">Rs 2,500</button>
+        <button class="chip" data-amount="5000">Rs 5,000</button>
+        <button class="chip" data-amount="10000">Rs 10,000</button>
+        <button class="chip" data-amount="25000">Rs 25,000</button>
+      </div>
+      <div class="custom-amount">
+        <span>Rs</span>
+        <input type="number" id="custom-amount" placeholder="Enter custom amount" min="1" />
+      </div>
+    </div>
+
+    <div class="payment-grid">
+      <div class="glass payment-card">
+        <div class="gateway-logo esewa">e</div>
+        <h3>eSewa</h3>
+        <p>Pay securely with Nepal's leading digital wallet.</p>
+        <button id="esewa-btn" class="pay-btn esewa">Give with eSewa</button>
+        <div id="esewa-status" class="status-message"></div>
+      </div>
+
+      <div class="glass payment-card">
+        <div class="gateway-logo khalti">K</div>
+        <h3>Khalti</h3>
+        <p>Give using Khalti digital wallet — fast and simple.</p>
+        <button id="khalti-btn" class="pay-btn khalti">Give with Khalti</button>
+        <div id="khalti-status" class="status-message"></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>🔒 Secure payments:</strong> You'll be redirected to eSewa or Khalti's secure page to complete your gift.
+      Your financial information never touches our site.
+    </div>
+
+    <span class="section-eyebrow">Your Gift at Work</span>
+    <h2 class="section-title">What your <span class="grad">partnership makes possible</span>.</h2>
+
+    <div class="impact-grid">
+      <div class="glass impact-card">
+        <div class="amount">Rs 500</div>
+        <div class="desc">Feeds a volunteer for a day on the field</div>
+      </div>
+      <div class="glass impact-card">
+        <div class="amount">Rs 2,500</div>
+        <div class="desc">Provides Bibles for 10 new believers</div>
+      </div>
+      <div class="glass impact-card">
+        <div class="amount">Rs 5,000</div>
+        <div class="desc">Supports a village outreach event</div>
+      </div>
+      <div class="glass impact-card">
+        <div class="amount">Rs 20,000</div>
+        <div class="desc">Sponsors a full-time missionary for a month</div>
+      </div>
+    </div>
+
+    <div class="verse-block">
+      <blockquote>
+        "Bring the full tithe into the storehouse... and thereby put me to the test, says the LORD of hosts, if I will not open the windows of heaven for you and pour down for you a blessing until there is no more need."
+      </blockquote>
+      <cite>Malachi 3:10</cite>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; {new Date().getFullYear()} Kingdom Expansion Partnership. All rights reserved.
+  </footer>
+
+  <script is:inline>
+    const WORKER_URL = "https://kep-payment-worker.enosh-emails.workers.dev";
+    let selectedAmount = 1000;
+
+    const chips = document.querySelectorAll(".chip");
+    const customAmount = document.getElementById("custom-amount");
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        chips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        selectedAmount = Number(chip.dataset.amount);
+        customAmount.value = "";
+      });
+    });
+
+    customAmount.addEventListener("input", () => {
+      const val = Number(customAmount.value);
+      if (val > 0) {
+        chips.forEach(c => c.classList.remove("active"));
+        selectedAmount = val;
+      }
+    });
+
+    function setStatus(id, message, type) {
+      const el = document.getElementById(id);
+      el.textContent = message;
+      el.className = "status-message " + (type || "");
+    }
+
+    // eSewa handler
+    document.getElementById("esewa-btn").addEventListener("click", async () => {
+      const btn = document.getElementById("esewa-btn");
+      const amount = customAmount.value ? Number(customAmount.value) : selectedAmount;
+
+      if (!amount || amount <= 0) {
+        setStatus("esewa-status", "Please enter a valid amount.", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      setStatus("esewa-status", "", "");
+
+      try {
+        const res = await fetch(WORKER_URL + "/api/esewa/initiate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        // Create hidden form and submit to eSewa
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = data.action_url;
+        Object.entries(data.payload).forEach(([key, value]) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = value;
+          form.appendChild(input);
+        });
+        document.body.appendChild(form);
+        form.submit();
+
+      } catch (err) {
+        setStatus("esewa-status", "Error: " + err.message, "error");
+        btn.disabled = false;
+        btn.textContent = "Give with eSewa";
+      }
+    });
+
+    // Khalti handler
+    document.getElementById("khalti-btn").addEventListener("click", async () => {
+      const btn = document.getElementById("khalti-btn");
+      const amount = customAmount.value ? Number(customAmount.value) : selectedAmount;
+
+      if (!amount || amount <= 0) {
+        setStatus("khalti-status", "Please enter a valid amount.", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      setStatus("khalti-status", "", "");
+
+      try {
+        const res = await fetch(WORKER_URL + "/api/khalti/initiate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        if (data.payment_url) {
+          window.location.href = data.payment_url;
+        } else {
+          throw new Error("No payment URL received");
+        }
+
+      } catch (err) {
+        setStatus("khalti-status", "Error: " + err.message, "error");
+        btn.disabled = false;
+        btn.textContent = "Give with Khalti";
+      }
+    });
+  </script>
+
+</body>
+</html>
